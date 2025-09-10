@@ -25,12 +25,12 @@ src/
 
 ```
 features/<domain>/
-  api/         # API calls with axios
-  components/  # UI components tied to this domain
-  hooks/       # Domain-specific hooks
-  model/       # Constants, mappers, shape docs
-  pages/       # Routed pages for this feature
-  index.js     # Public exports
+    api/         # API calls with axios
+    components/  # UI components tied to this domain
+    hooks/       # Domain-specific hooks
+    model/       # Constants, mappers, shape docs
+    pages/       # Routed pages for this feature
+    index.js     # Public exports
 ```
 
 ---
@@ -45,7 +45,7 @@ features/<domain>/
 ### Installation
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/forum-app-team/fa-frontend.git
 cd fa-frontend
 npm install
 ```

@@ -1,12 +1,16 @@
 import { Outlet } from "react-router-dom";
-// import Navbar from "./Navbar"; // TODO: implement nav bar
+import { NavigationBar } from "./NavigationBar";
 
 const GlobalLayout = () => {
   return (
-    <div>
-      {/* <Navbar /> */}
+    <div className="flex flex-col h-screen">
+      {/* Top Navigation Bar with a gray horizontal line at the bottom */}
+      <NavigationBar />
+      <hr></hr>
       <main>
-        <Outlet />
+        <div className="w-full text-center">
+          <Outlet />
+        </div>
       </main>
     </div>
   );
