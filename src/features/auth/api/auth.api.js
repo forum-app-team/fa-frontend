@@ -6,7 +6,7 @@ const loginUser = async (credentials) => {
   return response.data;
 };
 
-export const getCurrentUser = async () => {
+const getCurrentUser = async () => {
   const response = await apiClient.get("/api/auth/identity");
   return response.data;
 };
