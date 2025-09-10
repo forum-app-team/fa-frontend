@@ -14,6 +14,10 @@ const SKIP_AUTH = import.meta.env.VITE_SKIP_AUTH === "true";
 
 // Auth interceptor for requests
 apiClient.interceptors.request.use((config) => {
+  // Skip auth check in development mode
+  if (SKIP_AUTH) {
+    return config;
+  }
   const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
