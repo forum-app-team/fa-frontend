@@ -9,6 +9,19 @@ const apiClient = axios.create({
   },
 });
 
+// ! Dev mode flag
+const SKIP_AUTH = import.meta.env.VITE_SKIP_AUTH === "true";
+
+// Auth interceptor for requests
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Auth interceptor for responses
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {

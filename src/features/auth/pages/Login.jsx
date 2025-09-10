@@ -1,25 +1,33 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginStart, loginSuccess, loginFailure } from "../store/auth.slice";
 import { loginUser } from "../api/auth.api";
-import { useAuthContext } from "@/providers/AuthProvider";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
   });
-  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuthContext();
+  const dispatch = useDispatch();
+  const { error } = useSelector((state) => state.auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Set loading state
+      dispatch(loginStart());
+
+      // Send login request and get response
       const response = await loginUser(credentials);
-      await login(response.token, response.user);
-      navigate("/dashboard");
+
+      // Update store with user data and token
+      dispatch(loginSuccess(response));
+
+      navigate("/home");
     } catch (err) {
-      setError("Invalid credentials");
+      dispatch(loginFailure("Invalid credentials"));
     }
   };
 
