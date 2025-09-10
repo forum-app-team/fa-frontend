@@ -6,7 +6,7 @@ import { loginUser } from "../api/auth.api";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
-    username: "",
+    email: "",
     password: "",
   });
   const navigate = useNavigate();
@@ -37,14 +37,14 @@ const Login = () => {
       {error && <div style={{ color: "red" }}>{error}</div>}
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Username:</label>
+          <label>email:</label>
           <input
             type="text"
-            value={credentials.username}
+            value={credentials.email}
             onChange={(e) =>
               setCredentials({
                 ...credentials,
-                username: e.target.value,
+                email: e.target.value,
               })
             }
           />

@@ -6,9 +6,8 @@ const loginUser = async (credentials) => {
   return response.data;
 };
 
-const getCurrentUser = async () => {
-  // TODO: validate endpoint
-  const response = await apiClient.get("/api/auth/me");
+export const getCurrentUser = async () => {
+  const response = await apiClient.get("/api/auth/identity");
   return response.data;
 };
 
