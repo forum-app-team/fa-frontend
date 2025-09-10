@@ -1,10 +1,9 @@
 import { useState } from "react";
-import "./App.css";
-
 import AppRoutes from "./app/routes";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const { connectionStatus, error } = useAuth();
 
   return (
     <>
