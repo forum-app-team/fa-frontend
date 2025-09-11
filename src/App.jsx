@@ -1,5 +1,7 @@
 import AppRoutes from "./app/routes";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+
+// should be removed
+// import { useAuth } from "@/features/auth/hooks/useAuth"; 
 
 function App() {
   return (

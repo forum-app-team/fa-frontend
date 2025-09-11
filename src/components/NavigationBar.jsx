@@ -5,14 +5,16 @@ import Navbar from 'react-bootstrap/Navbar';
 import { useSelector, useDispatch } from 'react-redux';
 import { PATHS } from '../app/config/paths';
 import { logout } from '@/features/auth/store/auth.slice';
+import { logoutUser } from '../features/auth/api/auth.api';
 
 export const NavigationBar = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    const response = await logoutUser();
+    dispatch(logout(response));
     navigate(PATHS.ROOT);
   };
 

@@ -1,5 +1,7 @@
+// should be removed
+
 import { useState, useEffect } from "react";
-import { getCurrentUser } from "../api/auth.api";
+// import { getCurrentUser } from "../api/auth.api";
 import { useAuthContext } from "@/providers/AuthProvider";
 
 export const useAuth = () => {
@@ -16,7 +18,8 @@ export const useAuth = () => {
       }
 
       try {
-        const userData = await getCurrentUser();
+        // const userData = await getCurrentUser();
+        const userData = null;
         setUser(userData);
         setError(null);
       } catch (err) {

@@ -1,10 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { jwtDecode } from "jwt-decode";
+
+const token = localStorage.getItem("token");
+let user = null;
+
+if (token) {
+  try {
+    const tokenPaylaod = jwtDecode(token);
+    user = tokenPaylaod.sub;
+  } catch (err) {
+    localStorage.removeItem("token");
+  }
+}
 
 const initialState = {
-  user: null,
-  token: localStorage.getItem("token"),
+  user,
+  token,
   loading: false,
   error: null,
+  message: null,
 };
 
 const authSlice = createSlice({
@@ -14,26 +28,61 @@ const authSlice = createSlice({
     loginStart: (state) => {
       state.loading = true;
       state.error = null;
+      state.message = null;
     },
     loginSuccess: (state, action) => {
       state.loading = false;
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      localStorage.setItem("token", action.payload.token);
+
+      const { accessToken, message } = action.payload;
+      state.token = accessToken;
+
+      const tokenPayload = jwtDecode(accessToken);
+      state.user = tokenPayload.sub;
+
+      localStorage.setItem("token", accessToken); 
+
+      state.message = message;
     },
     loginFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
+      state.message = null;
     },
-    logout: (state) => {
+    logout: (state, action) => {
       state.user = null;
       state.token = null;
       state.error = null;
       localStorage.removeItem("token");
+      state.message = action.payload.message;
     },
+
+    // placeholder for registration reducers
+    registerStart: (state) => {
+      state.loading = true;
+      state.error = null;
+      state.message = null;
+    },
+    registerSuccess: (state, action) => {
+      state.loading = false;
+      state.error = null;
+      state.message = action.payload.message;
+    },
+    registerFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+      state.message = null;
+    }
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout } =
-  authSlice.actions;
+export const { 
+  loginStart, 
+  loginSuccess, 
+  loginFailure, 
+  logout, 
+  registerStart, 
+  registerSuccess, 
+  registerFailure 
+} = authSlice.actions;
+
 export default authSlice.reducer;
