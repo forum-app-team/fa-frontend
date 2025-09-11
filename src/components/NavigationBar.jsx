@@ -1,21 +1,55 @@
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import { PATHS } from "../app/config/paths";
+import Container from 'react-bootstrap/Container';
+import { Link, NavLink, useNavigate, generatePath } from 'react-router-dom';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import { useSelector, useDispatch } from 'react-redux';
+import { PATHS } from '../app/config/paths';
+import { logout } from '@/features/auth/store/auth.slice';
 
 export const NavigationBar = () => {
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate(PATHS.ROOT);
+  };
+
   return (
-    <Navbar expand="lg" className="w-full">
-      <Container fluid className="px-4 py-2 flex justify-between items-center">
-        <Navbar.Brand href={PATHS.ROOT} className="text-xl font-semibold">
+    <Navbar bg="light" expand="lg" className="w-100" data-bs-theme="light">
+      <Container fluid>
+        <Navbar.Brand as={Link} to={PATHS.ROOT} className="fw-semibold">
           Forum App
         </Navbar.Brand>
 
-        <Nav className="ml-auto">
-          <Nav.Link href={PATHS.LOGIN}>Login</Nav.Link>
-          <Nav.Link href={PATHS.REGISTER}>Register</Nav.Link>
-          <Nav.Link href={PATHS.CONTACT_US}>Contact Admin</Nav.Link>
-        </Nav>
+        <Navbar.Toggle aria-controls="main-nav" />
+        <Navbar.Collapse id="main-nav">
+          <Nav className="ms-auto">
+            {/* Admin/privileged links */}
+            {user?.role !== 'normal' && user ? (
+              <>
+                <Nav.Link as={NavLink} to={PATHS.MESSAGES}>Messages</Nav.Link>
+                <Nav.Link as={NavLink} to={PATHS.USERS} end>Users</Nav.Link>
+              </>
+            ) : null}
+
+            <Nav.Link as={NavLink} to={PATHS.CONTACT_US}>Contact Admin</Nav.Link>
+
+            {/* Auth-dependent links */}
+            {!user ? (
+              <>
+                <Nav.Link as={NavLink} to={PATHS.LOGIN} end>Login</Nav.Link>
+                <Nav.Link as={NavLink} to={PATHS.REGISTER} end>Register</Nav.Link>
+              </>
+            ) : (
+              <>
+                <Nav.Link as={NavLink} to={generatePath(PATHS.PROFILE, {id: user.id ?? 0})}>{user.username ?? user.email ?? "Account"}</Nav.Link>
+                <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+              </>
+            )}
+          </Nav>
+        </Navbar.Collapse>
       </Container>
     </Navbar>
   );
