@@ -12,7 +12,7 @@ const PATHS = {
 
   // Admin paths
   MESSAGES: "/messages",
-  ADMIN_USERS: "/users",
+  USERS: "/users",
 
   // Error paths
   ERROR: "*",

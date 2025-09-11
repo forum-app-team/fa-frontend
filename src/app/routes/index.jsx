@@ -33,7 +33,7 @@ const AppRoutes = () => {
         {/* Admin routes */}
         <Route element={<ProtectedRoute adminOnly={true} />}>
           <Route path={PATHS.MESSAGES} element={<MessageManagement />} />
-          <Route path={PATHS.ADMIN_USERS} element={<UserManagement />} />
+          <Route path={PATHS.USERS} element={<UserManagement />} />
         </Route>
 
         {/* 404 Error handling */}
