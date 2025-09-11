@@ -2,7 +2,7 @@ const PATHS = {
   // Public paths
   ROOT: "/",
   REGISTER: "/users/register",
-  LOGIN: "/login",
+  LOGIN: "/users/login",
   CONTACT_US: "/contactus",
 
   // Authenticated user paths
