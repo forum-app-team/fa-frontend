@@ -1,17 +1,20 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import UsersTable from '../components/UsersTable'
+import { useEffect, useState } from 'react';
+import { useListUsersQuery } from '../users.api';
+import UsersTable from '../components/UsersTable';
+import { useSelector } from 'react-redux';
 
-const demo = [
-  { id: '1', firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.com', dateJoined: '2025-09-10', type: 'admin', active: true },
-  { id: '2', firstName: 'Alan', lastName: 'Turing',  email: 'alan@example.com', dateJoined: '2025-09-09', type: 'normal', active: false },
-];
 
 const UserManagement = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    //dispatch();
-  }, [dispatch]);
+  const user = useSelector((state) => state.auth.user);
+  const [ page, setPage ] = useState(1);
+  const [ pageSize, setPageSize ] = useState(20);
+  const { data, isFetching, isError } = useListUsersQuery({
+    offset: (page - 1) * pageSize,
+    limit: pageSize,
+  });
+
+  const total = data?.totalCount ?? 0;
+  const pageCount = Math.max(1, Math.ceil(total / pageSize));
 
   const handleToggle = (u) => {
     // dispatch(toggleUserStatus(u.id))
@@ -20,7 +23,9 @@ const UserManagement = () => {
   return (
     <>
       <h1>User Management</h1>
-      <UsersTable users={demo} onToggleStatus={handleToggle}/>
+      {isFetching && <small>Loading...</small>}
+      {isError && <small>Failed to load.</small>}
+      <UsersTable users={data?.users} onToggleStatus={handleToggle} isSuper={user.role === 'super'}/>
     </>
   );
 };
