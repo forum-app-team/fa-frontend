@@ -6,6 +6,7 @@ import { adminUserApi } from '../features/admin/users.api';
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    [adminUserApi.reducerPath]: adminUserApi.reducer,
     // Add your feature reducer here:
     // posts: postsReducer,
     // etc...

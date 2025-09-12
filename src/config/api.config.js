@@ -9,6 +9,9 @@ const API_CONFIG = {
       REFRESH: "/api/auth/refresh",
       UPDATE_IDENTITY: "/api/auth/identity",
     },
+    ADMIN: {
+      USERS: "/api/auth/admin/users",
+    }
     // Add your endpoints here
     // POSTS: {
     //   LIST: "/api/posts",
