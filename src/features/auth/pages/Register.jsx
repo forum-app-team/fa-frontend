@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {registerStart, registerSuccess, registerFailure} from "../store/auth.slice";
 import {registerUser} from "../api/auth.api";
+import validateInput from '@/utils/validateUserInput';
+
+import { PATHS } from '@/app/config/paths';
 
 const Register = () => {
   const [credentials, setCredentials] = useState({
@@ -19,14 +22,23 @@ const Register = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      dispatch(registerStart());
+    dispatch(registerStart());
 
-      const response = await registerUser(credentials);
+    // input sanitation
+    // in the registration form, all fields are required
+    const { sanitized, errors } = validateInput(credentials, Object.keys(credentials));
+
+    if (Object.keys(errors).length > 0) {
+      dispatch(loginFailure(Object.values(errors)[0])); // just need the first error
+      return;
+    }
+    try {
+
+      const response = await registerUser(sanitized);
 
       dispatch(registerSuccess(response));
 
-      navigate("/user/login"); // no automatic login
+      navigate(PATHS.LOGIN); // no automatic login
 
     } catch(error) {
       dispatch(registerFailure("Registration failed. Please try again"));

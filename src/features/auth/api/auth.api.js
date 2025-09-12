@@ -15,7 +15,7 @@ const loginUser = async (credentials) => {
 
 const registerUser = async (credentials) => {
   const response = await apiClient.post(
-    API_CONFIG.REGISTER,
+    AUTH_API.REGISTER,
     credentials
   );
   return response.data;
@@ -28,7 +28,7 @@ const logoutUser = async () => {
 
 const updateUserIdentity = async (credentials) => {
   const response = apiClient.put(
-    API_CONFIG.UPDATE_IDENTITY,
+    AUTH_API.UPDATE_IDENTITY,
     credentials
   );
   return response.data;
@@ -36,7 +36,7 @@ const updateUserIdentity = async (credentials) => {
 
 const refreshToken = async () => {
   const response = await apiClient.post(
-    API_CONFIG.REFRESH,
+    AUTH_API.REFRESH,
     null, 
     {
       withCredentials: true // refresh token required
