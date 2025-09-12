@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {registerStart, registerSuccess, registerFailure} from "../store/auth.slice";
 import {registerUser} from "../api/auth.api";
-import validateInput from '@/utils/validateUserInput';
+import validateInput from '../utils/validateUserInput';
 
 import { PATHS } from '@/app/config/paths';
 
@@ -12,13 +12,16 @@ const Register = () => {
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
     firstName: "",
     lastName: ""
   });
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {error} = useSelector((state) => state.auth);
+  const {error, loading} = useSelector((state) => state.auth);
+
+  const passwordsMatch = credentials.password === credentials.confirmPassword;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -29,7 +32,7 @@ const Register = () => {
     const { sanitized, errors } = validateInput(credentials, Object.keys(credentials));
 
     if (Object.keys(errors).length > 0) {
-      dispatch(loginFailure(Object.values(errors)[0])); // just need the first error
+      dispatch(registerFailure(Object.values(errors)[0])); // just need the first error
       return;
     }
     try {
@@ -94,7 +97,16 @@ const Register = () => {
             onChange={handleChange}
           />
         </div>
-        <button type="submit">Register</button>
+        <div>
+          <label>Confirm Password:</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            value={credentials.confirmPassword}
+            onChange={handleChange}
+          />
+        </div>        
+        <button type="submit" disabled = {loading || !passwordsMatch}>Register</button>
       </form>
     </div>
   );

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { loginStart, loginSuccess, loginFailure } from "../store/auth.slice";
 import { loginUser } from "../api/auth.api";
-import validateInput from "@/utils/validateUserInput";
+import validateInput from "../utils/validateUserInput";
 import { PATHS } from "@/app/config/paths";
 
 const Login = () => {
@@ -69,7 +69,7 @@ const Login = () => {
       {error && <div style={{ color: "red" }}>{error}</div>}
       <form onSubmit={handleSubmit}>
         <div>
-          <label>email:</label>
+          <label>Email:</label>
           <input
             type="text"
             name="email"

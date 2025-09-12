@@ -27,7 +27,7 @@ const logoutUser = async () => {
 }
 
 const updateUserIdentity = async (credentials) => {
-  const response = apiClient.put(
+  const response = await apiClient.put(
     AUTH_API.UPDATE_IDENTITY,
     credentials
   );
