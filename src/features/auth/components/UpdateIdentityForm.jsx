@@ -8,22 +8,26 @@ import { updateUserIdentity } from "../api/auth.api";
 import validateInput from "../utils/validateUserInput";
 
 const initCredentials = {
-        currentPassword: "",
-        newPassword: "",
-        confirmNewPassword: "",
-        newEmail: "",
-        confirmNewEmail: ""
-    };
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+    newEmail: "",
+    confirmNewEmail: ""
+};
 
-const UpdateIdentityForm = () => {
+const UpdateIdentityForm = ({ mode }) => {
+    if (!mode) {
+        throw new Error("The form requires a `mode` prop: `password` or `email`");
+    }
     const [credentials, setCredentials] = useState(initCredentials);
     // const navigate = useNavigate();
     const dispatch = useDispatch();
     const { error, loading } = useSelector((state) => state.auth);
 
     // check if passwords / emails match
-    const passwordsMatch = credentials.newPassword === credentials.confirmNewPassword;
-    const emailsMatch = credentials.newEmail === credentials.confirmNewEmail;
+    const fieldsMatch = mode === "password"
+        ? credentials.newPassword === credentials.confirmNewPassword 
+        : credentials.newEmail === credentials.confirmNewEmail;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -37,15 +41,24 @@ const UpdateIdentityForm = () => {
         e.preventDefault();
         dispatch(updateIdentityStart());
 
-        const { sanitized, errors } = validateInput(credentials, ["currentPassword"]);
+        const requiredFields = mode === 'password'
+            ? ["currentPassword", "newPassword", "confirmNewPassword"]
+            : ["currentPassword", "newEmail", "confirmNewEmail"];
+
+        const { sanitized, errors } = validateInput(credentials, requiredFields);
 
         if (Object.keys(errors).length > 0) {
             dispatch(updateIdentityFailure(Object.values(errors)[0]));
             return;
         }
 
+        // extra layer of defense :)
+        const payload = mode === "password"
+            ? { currentPassword: sanitized.currentPassword, newPassword: sanitized.newPassword }
+            : { currentPassword: sanitized.currentPassword, newEmail: sanitized.newEmail };
+
         try {
-            const response = await updateUserIdentity(sanitized);
+            const response = await updateUserIdentity(payload);
 
             // Update store with user data and token
             dispatch(updateIdentitySuccess(response));
@@ -61,11 +74,11 @@ const UpdateIdentityForm = () => {
         }
     };
 
-    useEffect(() => {
-        return () => {
-            setCredentials(initCredentials);
-        };
-    }, []); // also clean up credentials at unmount;
+    // useEffect(() => {
+    //     return () => {
+    //         setCredentials(initCredentials);
+    //     };
+    // }, []); // also clean up credentials at unmount;
 
     return (
         <form onSubmit={handleSubmit}>
@@ -79,49 +92,55 @@ const UpdateIdentityForm = () => {
                 />
             </div>
 
-            <div>
-                <label>New Password:</label>
-                <input
-                    type="password"
-                    name="newPassword"
-                    value={credentials.newPassword}
-                    onChange={handleChange}
-                />
-            </div>
+            {mode === 'password' && (
+                <>
+                    <div>
+                        <label>New Password:</label>
+                        <input
+                            type="password"
+                            name="newPassword"
+                            value={credentials.newPassword}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <label>Confirm New Password:</label>
+                        <input
+                            type="password"
+                            name="confirmNewPassword"
+                            value={credentials.confirmNewPassword}
+                            onChange={handleChange}
+                        />
+                    </div>
+                </>
+            )}
+            {mode === "email" && (
+                <>
+                    <div>
+                        <label>New Email:</label>
+                        <input
+                            type="text"
+                            name="newEmail"
+                            value={credentials.newEmail}
+                            onChange={handleChange}
+                        />
+                    </div>
 
-            <div>
-                <label>Confirm New Password:</label>
-                <input
-                    type="password"
-                    name="confirmNewPassword"
-                    value={credentials.confirmNewPassword}
-                    onChange={handleChange}
-                />
-            </div>
-            
-            <div>
-                <label>New Email:</label>
-                <input
-                    type="text"
-                    name="newEmail"
-                    value={credentials.newEmail}
-                    onChange={handleChange}
-                />
-            </div>
-
-            <div>
-                <label>Confirm New Email:</label>
-                <input
-                    type="text"
-                    name="confirmNewEmail"
-                    value={credentials.confirmNewEmail}
-                    onChange={handleChange}
-                />
-            </div>
+                    <div>
+                        <label>Confirm New Email:</label>
+                        <input
+                            type="text"
+                            name="confirmNewEmail"
+                            value={credentials.confirmNewEmail}
+                            onChange={handleChange}
+                        />
+                    </div>
+                </>
+            )}
 
             {error && <p style={{ color: "red" }}>{error}</p>}
 
-            <button type="submit" disabled={loading || !passwordsMatch || !emailsMatch}>Save Changes</button>
+            <button type="submit" disabled={loading || !fieldsMatch}>Save Changes</button>
         </form>
     );
 };
