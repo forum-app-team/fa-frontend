@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import validator from 'validator';
 
 import { loginStart, loginSuccess, loginFailure } from "../store/auth.slice";
 import { loginUser } from "../api/auth.api";
+import validateInput from "@/utils/validateUserInput";
+import { PATHS } from "@/app/config/paths";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -29,24 +30,25 @@ const Login = () => {
     dispatch(loginStart());
 
     // input sanitation
-    const { email, password } = credentials;
-    const cleanEmail = email.trim();
-    const cleanPassword = password.trim();
+    // need to validate all fields of the login form
+    const { sanitized, errors } = validateInput(credentials, Object.keys(credentials));
+    // const { sanitized, errors } = validateInput(credentials, ["email", "password"]);
 
-    if (!validator.isEmail(cleanEmail)) {
-      dispatch(loginFailure("Invalid Email"));
+    if (Object.keys(errors).length > 0) {
+      dispatch(loginFailure(Object.values(errors)[0])); // just need the first error
       return;
     }
+
     try {
       // Send login request and get response
-      const response = await loginUser({ email: cleanEmail, password: cleanPassword });
+      const response = await loginUser(sanitized);
 
       // Update store with user data and token
       dispatch(loginSuccess(response));
 
       setCredentials({ email: "", password: "" });
 
-      navigate("/home");
+      navigate(PATHS.HOME);
 
     } catch (err) {
       const message = err?.data?.message || "Invalid credentials"
