@@ -5,9 +5,9 @@ const API_CONFIG = {
     AUTH: {
       LOGIN: "/api/auth/login",
       REGISTER: "/api/auth/register",
-      LOGOUT: "api/auth/logout",
-      REFRESH: "api/auth/refresh",
-      UPDATE_IDENTITY: "api/auth/identity",
+      LOGOUT: "/api/auth/logout",
+      REFRESH: "/api/auth/refresh",
+      UPDATE_IDENTITY: "/api/auth/identity",
     },
     // Add your endpoints here
     // POSTS: {

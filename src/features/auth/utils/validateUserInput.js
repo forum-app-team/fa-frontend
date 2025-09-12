@@ -12,24 +12,41 @@ const validateInput = (data, requiredFields = []) => {
         }
         // Set email to lowercase
         const trimmedValue = key.toLowerCase().includes("email") ? value.trim().toLowerCase() : value.trim();
-        
+
         sanitized[key] = trimmedValue;
 
         if (requiredFields.includes(key) && !trimmedValue) {
-            errors["key"] = `${key} is required`;
+            errors[key] = `${key} is required`;
             continue;
         }
         if (
             key.toLowerCase().includes("email") &&  // handle keys like `newEmail`
-            trimmedValue && 
+            trimmedValue &&
             !validator.isEmail(trimmedValue)
         ) {
             errors[key] = "Invalid Email Address";
             continue;
         }
     }
-    
-    return {sanitized, errors};
+
+    // check 'confirm' fields and remove them before sending out the request
+    Object.keys(sanitized)
+        .filter((key) => key.startsWith("confirm")) // grab pairs of `attr` & `confirmAttr`
+        .forEach((confirmKey) => {
+            const originalKey =
+                // remove 'confirm' prefix, lowercase the first letter
+                confirmKey.charAt(7).toLowerCase() + confirmKey.slice(8); 
+            if (
+                sanitized[originalKey] && 
+                sanitized[confirmKey] && 
+                sanitized[originalKey] !== sanitized[confirmKey]
+            ) {
+                errors[confirmKey] = `${originalKey} does not match`;
+            }
+            delete sanitized[confirmKey];
+        });
+
+    return { sanitized, errors };
 
 };
 

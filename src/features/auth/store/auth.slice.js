@@ -25,6 +25,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    //login reducers
     loginStart: (state) => {
       state.loading = true;
       state.error = null;
@@ -39,7 +40,7 @@ const authSlice = createSlice({
       const tokenPayload = jwtDecode(accessToken);
       state.user = tokenPayload.sub;
 
-      localStorage.setItem("token", accessToken); 
+      localStorage.setItem("token", accessToken);
 
       state.message = message;
     },
@@ -56,7 +57,7 @@ const authSlice = createSlice({
       state.message = action.payload.message;
     },
 
-    // placeholder for registration reducers
+    // registration reducers
     registerStart: (state) => {
       state.loading = true;
       state.error = null;
@@ -71,18 +72,46 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
       state.message = null;
-    }
-  },
+    },
+
+    // update identity reducers
+    updateIdentityStart: (state) => {
+      state.loading = true;
+      state.error = null;
+      state.message = null;
+    },
+    updateIdentitySuccess: (state, action) => {
+      state.loading = false;
+
+      const { accessToken, message } = action.payload;
+      state.token = accessToken;
+
+      const tokenPayload = jwtDecode(accessToken);
+      state.user = tokenPayload.sub;
+
+      localStorage.setItem("token", accessToken);
+
+      state.message = message;
+    },
+    updateIdentityFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+      state.message = null;
+    },
+  }
 });
 
-export const { 
-  loginStart, 
-  loginSuccess, 
-  loginFailure, 
-  logout, 
-  registerStart, 
-  registerSuccess, 
-  registerFailure 
+export const {
+  loginStart,
+  loginSuccess,
+  loginFailure,
+  logout,
+  registerStart,
+  registerSuccess,
+  registerFailure,
+  updateIdentityStart,
+  updateIdentitySuccess,
+  updateIdentityFailure
 } = authSlice.actions;
 
 export default authSlice.reducer;
