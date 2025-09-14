@@ -129,3 +129,66 @@ For quick endpoint testing, you can bypass authentication:
    - Allow direct access to all endpoints
 
 ⚠️ **WARNING**: Never enable this in production!
+
+
+## 🔐 Authentication
+
+Our app uses **JWT-based authentication** with short-lived access tokens (stored in Redux) and a long-lived refresh token (HttpOnly cookie).
+
+### Token Refresh
+
+* **Reactive refresh (interceptor)**
+
+  * Every API request attaches the current access token.
+  * On `401 Unauthorized`:
+
+    1. Requests are paused.
+    2. A single refresh call (`/api/auth/refresh`) is made with the refresh cookie.
+    3. Redux is updated with the new access token.
+    4. Paused requests are retried with the new token.
+  * If refresh fails, the user is logged out.
+
+  ```mermaid
+  sequenceDiagram
+    participant C as Component
+    participant A as Axios Client
+    participant S as Server
+
+    C->>A: Send request with access token
+    A->>S: API call (Authorization: Bearer <token>)
+    S-->>A: 401 Unauthorized (token expired)
+
+    A->>S: POST /auth/refresh (with refresh cookie)
+    S-->>A: 200 OK (new access token)
+
+    A->>C: Update Redux store with new token
+    A->>S: Retry original request with new token
+    S-->>A: 200 OK (data)
+    A-->>C: Response delivered
+  ```
+
+* **App-level silent refresh (on reload)**
+
+  * On initial page load, a one-time `useEffect` calls `/api/auth/refresh`.
+  * If valid, Redux is hydrated with a new access token before any user interaction.
+  * If invalid, the user stays logged out.
+
+### Redux Auth State
+
+* **`state.auth.user`** -> stores user info:
+
+  ```js
+  {
+    id: string,
+    email: string,
+    role: "normal" | "admin" | "super",
+    emailVerified: boolean
+  }
+  ```
+
+* **Access token retrieval (compatibility only)**
+
+  * `tokenService.get()` from `@/libs/tokenService`
+  * `localStorage.get("token")` (legacy fallback)
+
+⚠️ In practice, do **not** fetch the token directly. All API calls should use the shared Axios client (`apiClient` from `@/libs/axios`), which automatically attaches and refreshes tokens.
