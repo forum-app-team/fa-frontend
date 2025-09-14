@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 
+/*
 const token = localStorage.getItem("token");
 let user = null;
 
@@ -12,10 +13,11 @@ if (token) {
     localStorage.removeItem("token");
   }
 }
+*/
 
 const initialState = {
-  user,
-  token,
+  user: null,
+  token: null,
   loading: false,
   error: null,
   message: null,
@@ -37,10 +39,8 @@ const authSlice = createSlice({
       const { accessToken, message } = action.payload;
       state.token = accessToken;
 
-      const tokenPayload = jwtDecode(accessToken);
-      state.user = tokenPayload.sub;
-
-      localStorage.setItem("token", accessToken);
+      const { sub: id, email, role, emailVerified } = jwtDecode(accessToken);
+      state.user = { id, email, role, emailVerified };
 
       state.message = message;
     },
@@ -53,7 +53,6 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.error = null;
-      localStorage.removeItem("token");
       state.message = action.payload.message;
     },
 
@@ -86,10 +85,8 @@ const authSlice = createSlice({
       const { accessToken, message } = action.payload;
       state.token = accessToken;
 
-      const tokenPayload = jwtDecode(accessToken);
-      state.user = tokenPayload.sub;
-
-      localStorage.setItem("token", accessToken);
+      const { sub: id, email, role, emailVerified } = jwtDecode(accessToken);
+      state.user = { id, email, role, emailVerified };
 
       state.message = message;
     },
