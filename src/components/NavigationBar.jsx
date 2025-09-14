@@ -4,8 +4,9 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useSelector, useDispatch } from 'react-redux';
 import { PATHS } from '../app/config/paths';
-import { logout } from '@/features/auth/store/auth.slice';
+import { logout } from '../features/auth/store/auth.slice';
 import { logoutUser } from '../features/auth/api/auth.api';
+import { isAxiosError } from 'axios';
 
 export const NavigationBar = () => {
   const user = useSelector((state) => state.auth.user);
@@ -13,9 +14,15 @@ export const NavigationBar = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    const response = await logoutUser();
-    dispatch(logout(response));
-    navigate(PATHS.ROOT);
+    try {
+      const response = await logoutUser();
+      dispatch(logout(response));
+    } catch (error) {
+      if (isAxiosError(error) && error.status === 401)
+        return;
+    } finally {
+      navigate(PATHS.ROOT);
+    }
   };
 
   return (

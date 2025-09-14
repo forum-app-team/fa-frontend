@@ -21,7 +21,7 @@ const ProtectedRoute = ({ adminOnly = false }) => {
   }
 
   // Check admin access for admin-only routes
-  if (adminOnly && (!user || user.role !== "admin")) {
+  if (adminOnly && (!user || user.role === "normal")) {
     return <Navigate to={PATHS.HOME} replace />;
   }
 

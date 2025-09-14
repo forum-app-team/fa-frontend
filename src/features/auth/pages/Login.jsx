@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { loginStart, loginSuccess, loginFailure } from "../store/auth.slice";
@@ -14,7 +14,7 @@ const Login = () => {
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { error, loading } = useSelector((state) => state.auth);
+  const { user, error, loading } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -63,6 +63,7 @@ const Login = () => {
     };
   }, []); // also clean up credentials at unmount;
 
+  if (user) return <Navigate to={PATHS.HOME} />;
   return (
     <div>
       <h2>Login</h2>
