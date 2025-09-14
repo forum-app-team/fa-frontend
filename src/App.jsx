@@ -8,10 +8,12 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const controller = new AbortController();
     (async () => {
       try {
         const { data } = await refreshClient.post("", {}, {
           withCredentials: true, // send refresh cookie
+          signal: controller.signal,
         });
         console.warn(data);
         if (data?.accessToken) {
@@ -24,6 +26,10 @@ function App() {
         dispatch(logout({ message: error.message }));
       }
     })();
+    return () => {
+      controller.abort();
+      dispatch(logout());
+    };
   }, [dispatch]);
   return (
     <>
