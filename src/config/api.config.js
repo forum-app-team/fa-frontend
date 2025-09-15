@@ -11,11 +11,26 @@ const API_CONFIG = {
     },
     ADMIN: {
       USERS: "/api/auth/admin/users",
-    }
+    },
     // Add your endpoints here
-    // POSTS: {
-    //   LIST: "/api/posts",
-    // },
+    POSTS: {
+      LIST: "/api/posts",  // GET
+      DETAIL: (id) => `/api/posts/${id}`,  // GET
+      CREATE: "/api/posts",  // POST
+      UPDATE: (id) => `/api/posts/${id}`,  // PUT
+      DELETE: (id) => `/api/posts/${id}`,  // DELETE
+
+      PUBLISH: (id) => `/api/posts/${id}/publish`,  // PUT
+      ARCHIVE: (id) => `/api/posts/${id}/archive`,  // POST
+      UNARCHIVE: (id) => `/api/posts/${id}/unarchive`,  // POST
+      HIDE: (id) => `/api/posts/${id}/hide`,  // POST
+      UNHIDE: (id) => `/api/posts/${id}/unhide`,  // POST
+
+      BAN: (id) => `/api/posts/${id}/ban`,  // POST, Admin
+      UNBAN: (id) => `/api/posts/${id}/unban`,  // POST, Admin
+      RECOVER: (id) => `/api/posts/${id}/recover`,  // POST, Admin
+
+    },
     // etc...
   },
 };

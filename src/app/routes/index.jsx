@@ -11,6 +11,7 @@ import UserManagement from "../../features/admin/pages/UserManagement";
 import MessageManagement from "../../features/messages/pages/MessageManagement";
 import UserProfile from "../../features/users/pages/UserProfile";
 import PostDetail from "../../features/posts/pages/PostDetail";
+import NewPost from "../../features/posts/pages/NewPost";
 import NotFound from "../../components/NotFound";
 
 const AppRoutes = () => {
@@ -28,6 +29,7 @@ const AppRoutes = () => {
           <Route path={PATHS.HOME} element={<HomeRoute />} />
           <Route path={PATHS.PROFILE} element={<UserProfile />} />
           <Route path={PATHS.POST_DETAIL} element={<PostDetail />} />
+          <Route path={PATHS.POST_NEW} element={<NewPost />} />
         </Route>
 
         {/* Admin routes */}
