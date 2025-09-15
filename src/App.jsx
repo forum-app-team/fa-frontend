@@ -28,7 +28,7 @@ function App() {
     })();
     return () => {
       controller.abort();
-      dispatch(logout());
+      dispatch(logout({}));
     };
   }, [dispatch]);
   return (

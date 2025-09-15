@@ -1,11 +1,10 @@
-// components/UsersTable.jsx
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import { Link, generatePath } from 'react-router-dom';
 import { PATHS } from '@/app/config/paths';
 
-export default function UsersTable({ users = [], isSuper, onToggleStatus }) {
+export default function UsersTable({ users = [], isSuper, onToggleState }) {
   const fmt = (iso) => (iso ? new Date(iso).toLocaleDateString() : '');
 
   if (!users.length) {
@@ -43,7 +42,8 @@ export default function UsersTable({ users = [], isSuper, onToggleStatus }) {
                   type="checkbox"
                   variant="outline-primary"
                   checked={u.role === 'admin'}
-                  // TODO: onChange={(e) => setChecked(e.currentTarget.checked)}
+                  onChange={() => onToggleState({...u, isActive: undefined})}
+                  disabled={!u.isActive}
                   className="text-capitalize"
                 >{u.role}</ToggleButton>
               </td> :
@@ -53,7 +53,7 @@ export default function UsersTable({ users = [], isSuper, onToggleStatus }) {
               <Button
                 size="sm"
                 variant={u.isActive ? 'danger' : 'outline-success'}
-                onClick={() => onToggleStatus?.(u)}
+                onClick={() => onToggleState({...u, role: undefined})}
                 disabled={u.role === 'admin'}
               >
                 {u.isActive ? 'Ban' : 'Unban'}
