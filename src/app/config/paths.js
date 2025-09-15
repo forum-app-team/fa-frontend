@@ -9,6 +9,7 @@ const PATHS = {
   HOME: "/home",
   PROFILE: "/users/:id/profile",
   POST_DETAIL: "posts/:id",
+  POST_NEW: "/posts/new",
 
   // Admin paths
   MESSAGES: "/messages",
