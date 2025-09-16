@@ -8,8 +8,11 @@ const PATHS = {
   // Authenticated user paths
   HOME: "/home",
   PROFILE: "/users/:id/profile",
-  POST_DETAIL: "posts/:id",
+
+  POST_DETAIL: "/posts/:id",
   POST_NEW: "/posts/new",
+  POST_EDIT: "/posts/:id/edit",
+
 
   // Admin paths
   MESSAGES: "/messages",

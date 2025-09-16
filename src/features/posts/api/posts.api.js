@@ -6,12 +6,12 @@ const POSTS_API = API_CONFIG.ENDPOINTS.POSTS;
 
 const listPublishedPosts = async () => {
     const { data } = await apiClient.get(POSTS_API.LIST);
-    return data; // [{id, userId, title, postDate}, ...]
+    return data;
 };
 
 const getPostDetail = async (id) => {
     const { data } = await apiClient.get(POSTS_API.DETAIL(id));
-    return data; // { id, userId, title, content, status, isArchived, ... }
+    return data;
 };
 
 const createPost = async (payload) => {
