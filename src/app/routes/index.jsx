@@ -12,7 +12,6 @@ import MessageManagement from "../../features/messages/pages/MessageManagement";
 import UserProfile from "../../features/users/pages/UserProfile";
 import PostDetail from "../../features/posts/pages/PostDetail";
 import NewPost from "../../features/posts/pages/NewPost";
-import FilePage from "../../features/files/pages/FilePage";
 import NotFound from "../../components/NotFound";
 
 const AppRoutes = () => {
@@ -31,7 +30,6 @@ const AppRoutes = () => {
           <Route path={PATHS.PROFILE} element={<UserProfile />} />
           <Route path={PATHS.POST_DETAIL} element={<PostDetail />} />
           <Route path={PATHS.POST_NEW} element={<NewPost />} />
-          <Route path={PATHS.FILES_TEST} element={<FilePage />} />
         </Route>
 
         {/* Admin routes */}

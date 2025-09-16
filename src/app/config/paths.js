@@ -10,7 +10,6 @@ const PATHS = {
   PROFILE: "/users/:id/profile",
   POST_DETAIL: "posts/:id",
   POST_NEW: "/posts/new",
-  FILES_TEST: "/files/test",
 
   // Admin paths
   MESSAGES: "/messages",
