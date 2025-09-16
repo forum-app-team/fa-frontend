@@ -34,6 +34,12 @@ const API_CONFIG = {
       LIST: "/api/messages", // GET, Admin
       PATCH: (id) => `/api/messages/${id}`, //PATCH, Admin
     },
+    FILES: {
+      // PRESIGN: "/api/files/presign",  // POST
+      DIRECT_UPLOAD: "/api/files/upload",  // POST
+      RETRIEVE: (objectKey) => `/api/files/retrieve/${objectKey}`,  // GET
+    },
+    // etc...
   },
 };
 
