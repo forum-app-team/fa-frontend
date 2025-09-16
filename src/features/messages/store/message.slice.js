@@ -1,10 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getMessagesThunk, sendMessageThunk } from "./message.thunk";
+import {
+  getMessagesThunk,
+  sendMessageThunk,
+  updateMessageStatusThunk,
+} from "./message.thunk";
 
 const messageSlice = createSlice({
   name: "messages",
   initialState: {
     loading: false,
+    updating: false,
     success: false,
     error: null,
     messages: [],
@@ -30,14 +35,40 @@ const messageSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(getMessagesThunk.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(getMessagesThunk.fulfilled, (state, action) => {
+        state.loading = false;
         state.messages = action.payload;
+      })
+      .addCase(getMessagesThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateMessageStatusThunk.pending, (state) => {
+        state.updating = true;
+      })
+      .addCase(updateMessageStatusThunk.fulfilled, (state, action) => {
+        state.updating = false;
+        const updated = action.payload;
+        const idx = state.messages.findIndex((m) => m.id === updated.id);
+        if (idx !== -1) {
+          state.messages[idx] = { ...state.messages[idx], ...updated };
+        }
+      })
+      .addCase(updateMessageStatusThunk.rejected, (state, action) => {
+        state.updating = false;
+        state.error = action.payload;
       });
   },
 });
 
 export const selectMessageLoading = (state) => {
   return state.message?.loading || false;
+};
+export const selectMessageUpdating = (state) => {
+  return state.message?.updating || false;
 };
 export const selectMessageSuccess = (state) => {
   return state.message?.success || false;
