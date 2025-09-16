@@ -31,6 +31,11 @@ const API_CONFIG = {
       RECOVER: (id) => `/api/posts/${id}/recover`,  // POST, Admin
 
     },
+    FILES: {
+      // PRESIGN: "/api/files/presign",  // POST
+      DIRECT_UPLOAD: "/api/files/upload",  // POST
+      RETRIEVE: (objectKey) => `/api/files/retrieve/${objectKey}`,  // GET
+    },
     // etc...
   },
 };
