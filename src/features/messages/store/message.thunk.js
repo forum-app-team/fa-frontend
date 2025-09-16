@@ -1,5 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllMessages, sendMessage } from "../api/message.api";
+import {
+  getAllMessages,
+  sendMessage,
+  updateMessageStatus,
+} from "../api/message.api";
 
 export const sendMessageThunk = createAsyncThunk(
   "messages/send",
@@ -18,6 +22,18 @@ export const getMessagesThunk = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getAllMessages();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateMessageStatusThunk = createAsyncThunk(
+  "messages/updateStatus",
+  async ({ id, status }, { rejectWithValue }) => {
+    try {
+      const response = await updateMessageStatus(id, status);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
