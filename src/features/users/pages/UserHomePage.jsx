@@ -1,4 +1,3 @@
-// fa-frontend/src/features/users/pages/UserHomePage.jsx
 import { useEffect, useState, useMemo, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";

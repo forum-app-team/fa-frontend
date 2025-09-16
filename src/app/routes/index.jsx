@@ -13,6 +13,7 @@ import UserProfile from "../../features/users/pages/UserProfile";
 import PostDetail from "../../features/posts/pages/PostDetail";
 import NewPost from "../../features/posts/pages/NewPost";
 import EditPost from "../../features/posts/pages/EditPost";
+
 import NotFound from "../../components/NotFound";
 
 const AppRoutes = () => {
@@ -32,6 +33,7 @@ const AppRoutes = () => {
           <Route path={PATHS.POST_DETAIL} element={<PostDetail />} />
           <Route path={PATHS.POST_NEW} element={<NewPost />} />
           <Route path={PATHS.POST_EDIT} element={<EditPost />} />
+
         </Route>
 
         {/* Admin routes */}
