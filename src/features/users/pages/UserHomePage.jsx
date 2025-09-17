@@ -7,7 +7,8 @@ import * as Icon from 'react-bootstrap-icons';
 import PostTable from "../components/PostTable";
 import { usePagination } from "@/hooks/usePagination";
 import PaginationComponent from "@/components/Pagination";
-import { useLazyListPostsQuery } from "../../admin/posts.api";
+import { useLazyListPostsQuery, useBanPostMutation, useUnbanPostMutation, useRecoverPostMutation } from "../../admin/posts.api";
+import ConfirmationPopup from "../../admin/components/ConfirmationPopup";
 
 export default function UserHomePage({isAdmin}) {/*
   const navigate = useNavigate();
@@ -218,6 +219,29 @@ export default function UserHomePage({isAdmin}) {/*
     });
   };
 
+  // perform actions
+  const [ showPopup, setShowPopup ] = useState(false);
+  const [ popupTitle, setPopupTitle ] = useState('');
+  const [ popupContent, setPopupContent ] = useState('');
+  const popupHandlerRef = useRef(() => {});
+  const [ banPost, {} ] = useBanPostMutation();
+  const [ unbanPost, {} ] = useUnbanPostMutation();
+  const [ recoverPost, {} ] = useRecoverPostMutation();
+  const handleAction = (post) => {
+    const { id, action, title } = post;
+    setShowPopup(true);
+    setPopupTitle(`Are you sure to ${action} this post?`);
+    setPopupContent(title);
+    if (action === 'ban') {
+      popupHandlerRef.current = async () => await banPost(id);
+    } else if (action === 'unban') {
+      popupHandlerRef.current = async () => await unbanPost(id);
+    } else if (action === 'recover') {
+      popupHandlerRef.current = async () => await recoverPost(id);
+    }
+  };
+
+  // load posts
   useEffect(() => {
     reset();
     const req = queryPosts({
@@ -315,8 +339,16 @@ export default function UserHomePage({isAdmin}) {/*
         </div>
       ) : isError ? (
         <Alert variant="danger" className="border">{JSON.stringify(error)}</Alert>
-      ) : <PostTable posts={data?.items} isAdmin={isAdmin}/>
+      ) : <PostTable posts={data?.items} isAdmin={isAdmin} status={postFilter.status} onActionTriggered={handleAction}/>
       }
+
+      <ConfirmationPopup
+        show={showPopup}
+        title={popupTitle}
+        bodyContent={popupContent}
+        onHide={() => setShowPopup(false)}
+        handlerRef={popupHandlerRef}
+      />
 
       {/* Pagination */}
       <PaginationComponent

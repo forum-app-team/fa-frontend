@@ -17,6 +17,7 @@ const UserManagement = () => {
     setPage(pageCount);
 
   const [ showPopup, setShowPopup ] = useState(false);
+  const [ popupTitle, setPopupTitle ] = useState('');
   const [ popupContent, setPopupContent ] = useState('');
   const popupHandlerRef = useRef(() => {});
   const [ updateUserStatus, {} ] = useUpdateUserStatusMutation();
@@ -24,12 +25,13 @@ const UserManagement = () => {
   const handleToggleState = (u) => {
     const { id, email, role, isActive } = u;
     setShowPopup(true);
+    setPopupContent(`Email: ${email}`);
     if (role) {
       const newRole = role === 'admin' ? 'normal' : 'admin';
-      setPopupContent(`Are you sure you want to change the role of User ${email} to ${newRole}?`);
+      setPopupTitle(`Are you sure to ${role === 'normal' ? 'pro' : 'de'}mote this user?`);
       popupHandlerRef.current = async () => await updateUserRoles([{id, role: newRole}]);
     } else {
-      setPopupContent(`Are you sure you want to ${isActive ? '' : 'un'}ban User ${email}?`);
+      setPopupTitle(`Are you sure to ${isActive ? '' : 'un'}ban this user?`);
       popupHandlerRef.current = async () => await updateUserStatus([{id, active: !isActive}]);
     }
   };
@@ -46,6 +48,7 @@ const UserManagement = () => {
       />
       <ConfirmationPopup
         show={showPopup}
+        title={popupTitle}
         bodyContent={popupContent}
         onHide={() => setShowPopup(false)}
         handlerRef={popupHandlerRef}

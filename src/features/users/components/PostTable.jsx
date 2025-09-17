@@ -1,7 +1,7 @@
 import { Alert, Badge, Button, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function PostTable({ posts = [], isAdmin, status = 'Published' }) {
+export default function PostTable({ posts = [], isAdmin, status = 'Published', onActionTriggered }) {
   if (!posts.length)
     return <Alert variant="light" className="border">No posts found.</Alert>;
 
@@ -37,7 +37,7 @@ export default function PostTable({ posts = [], isAdmin, status = 'Published' })
                 <Button
                   size="sm"
                   variant={status === 'Published' ? 'danger': 'success'}
-                  onClick={() => {}}
+                  onClick={() => onActionTriggered({ ...post, action: buttons[status].toLowerCase() })}
                 >{buttons[status]}</Button>
               </td>
             }

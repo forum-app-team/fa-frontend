@@ -18,15 +18,23 @@ export const adminPostApi = createApi({
         params: { offset, limit, status, sort, field, q, ascending },
       }),
       providesTags: (res) =>
-        res?.posts
-          ? [{ type: 'Post', id: 'LIST' }, ...res.posts.map(p => ({ type: 'Post', id: p.id }))]
+        res?.items
+          ? [{ type: 'Post', id: 'LIST' }, ...res.items.map(p => ({ type: 'Post', id: p.id }))]
           : [{ type: 'Post', id: 'LIST' }],
     }),
-    updatePostStatus: build.mutation({
-      query: (patches) => ({ url: '/status', method: 'PATCH', data: patches }),
-      invalidatesTags: (r, e, patches) => patches.map(({ id }) => ({ type: 'Post', id })),
+    banPost: build.mutation({
+      query: (id) => ({ url: `/${id}/ban`, method: 'POST' }),
+      invalidatesTags: (r, e, id) => [{ type: 'Post', id }],
+    }),
+    unbanPost: build.mutation({
+      query: (id) => ({ url: `/${id}/unban`, method: 'POST' }),
+      invalidatesTags: (r, e, id) => [{ type: 'Post', id }],
+    }),
+    recoverPost: build.mutation({
+      query: (id) => ({ url: `/${id}/recover`, method: 'POST' }),
+      invalidatesTags: (r, e, id) => [{ type: 'Post', id }],
     }),
   }),
 });
 
-export const { useLazyListPostsQuery, useUpdatePostStatusMutation } = adminPostApi;
+export const { useLazyListPostsQuery, useBanPostMutation, useUnbanPostMutation, useRecoverPostMutation } = adminPostApi;
