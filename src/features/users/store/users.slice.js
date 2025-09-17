@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import apiClient from "@/libs/axios";
+import { API_CONFIG } from "@/config/api.config";
 
 const axiosBaseQuery =
   ({ baseUrl } = { baseUrl: "" }) =>
@@ -29,14 +30,13 @@ export const normalUserApi = createApi({
   tagTypes: ["Profile", "TopPosts", "Drafts", "History", "Email"],
   endpoints: (build) => ({
     getProfile: build.query({
-      // Updated to use /api/users/profile/<user_id>
-      query: (userId) => ({ url: `/api/users/profile/${userId}` }),
+      query: (userId) => ({ url: API_CONFIG.ENDPOINTS.USERS.PROFILE(userId) }),
       providesTags: ["Profile"],
     }),
 
     getTopPosts: build.query({
       query: (limit = 3) => ({
-        url: `/api/posts/top?limit=${limit}`,
+        url: API_CONFIG.ENDPOINTS.POSTS.TOP_POSTS(limit),
       }),
       providesTags: (result) =>
         result
@@ -48,7 +48,7 @@ export const normalUserApi = createApi({
     }),
 
     getDrafts: build.query({
-      query: () => ({ url: "/api/posts/drafts" }),
+      query: () => ({ url: API_CONFIG.ENDPOINTS.POSTS.DRAFTS }),
       providesTags: (result) =>
         result
           ? [
@@ -58,39 +58,10 @@ export const normalUserApi = createApi({
           : [{ type: "Drafts", id: "LIST" }],
     }),
 
-    getViewHistory: build.query({
-      query: (params = {}) => {
-        const q = new URLSearchParams();
-        if (params.search) q.set("search", params.search);
-        if (params.date) q.set("date", params.date);
-        return { url: `/api/users/identity/history?${q.toString()}` };
-      },
-      transformResponse: (data) =>
-        Array.isArray(data)
-          ? data
-              .filter((item) => item.published)
-              .sort((a, b) => new Date(b.viewedAt) - new Date(a.viewedAt))
-          : data,
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map((h) => ({ type: "History", id: h.postId })),
-              { type: "History", id: "LIST" },
-            ]
-          : [{ type: "History", id: "LIST" }],
-    }),
-
-    requestProfileImageUpload: build.mutation({
-      query: () => ({
-        url: "/api/users/identity/profile-image/presign",
-        method: "POST",
-      }),
-    }),
-
     updateProfileImage: build.mutation({
-      query: (body) => ({
-        url: "/api/users/identity/profile-image",
-        method: "PUT",
+      query: ({ userId, ...body }) => ({
+        url: API_CONFIG.ENDPOINTS.USERS.PATCH_PROFILE(userId),
+        method: "PATCH",
         data: body,
       }),
       invalidatesTags: ["Profile"],
@@ -98,20 +69,11 @@ export const normalUserApi = createApi({
 
     requestEmailVerification: build.mutation({
       query: (newEmail) => ({
-        url: "/api/users/identity/email/verification",
+        url: API_CONFIG.ENDPOINTS.AUTH.EMAIL_VERIFICATION_SEND,
         method: "POST",
-        data: { newEmail },
+        data: { email: newEmail },
       }),
       invalidatesTags: ["Email"],
-    }),
-
-    confirmEmailUpdate: build.mutation({
-      query: ({ code, newEmail }) => ({
-        url: "/api/users/identity/email/confirm",
-        method: "POST",
-        data: { code, newEmail },
-      }),
-      invalidatesTags: ["Profile", "Email"],
     }),
   }),
 });
@@ -120,9 +82,6 @@ export const {
   useGetProfileQuery,
   useGetTopPostsQuery,
   useGetDraftsQuery,
-  useGetViewHistoryQuery,
-  useRequestProfileImageUploadMutation,
   useUpdateProfileImageMutation,
   useRequestEmailVerificationMutation,
-  useConfirmEmailUpdateMutation,
 } = normalUserApi;

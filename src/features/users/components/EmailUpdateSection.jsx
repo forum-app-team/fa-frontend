@@ -1,14 +1,12 @@
-
 import { useState } from "react";
-import apiClient from "@/libs/axios";
-import { API_CONFIG } from "@/config/api.config";
+import { useRequestEmailVerificationMutation } from "../store/users.slice";
 
 const EmailUpdateSection = () => {
   const [email, setEmail] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [requestEmailVerification, { isLoading }] = useRequestEmailVerificationMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,16 +20,17 @@ const EmailUpdateSection = () => {
       setError("Emails do not match.");
       return;
     }
-    setLoading(true);
     try {
-      await apiClient.post(API_CONFIG.ENDPOINTS.AUTH.EMAIL_VERIFICATION_SEND, { email });
-      setSuccess("Verification email sent! Please check your inbox and follow the link to verify your new email address.");
+      await requestEmailVerification(email).unwrap();
+      setSuccess(
+        "Verification email sent! Please check your inbox and follow the link to verify your new email address."
+      );
       setEmail("");
       setConfirmEmail("");
     } catch (err) {
-      setError(err?.response?.data?.message || err.message || "Failed to send verification email.");
-    } finally {
-      setLoading(false);
+      setError(
+        err?.data?.message || err?.error || err?.message || "Failed to send verification email."
+      );
     }
   };
 
@@ -45,22 +44,22 @@ const EmailUpdateSection = () => {
             className="form-control mb-2"
             placeholder="New email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             required
-            disabled={loading}
+            disabled={isLoading}
           />
           <input
             type="email"
             className="form-control"
             placeholder="Confirm new email"
             value={confirmEmail}
-            onChange={e => setConfirmEmail(e.target.value)}
+            onChange={(e) => setConfirmEmail(e.target.value)}
             required
-            disabled={loading}
+            disabled={isLoading}
           />
         </div>
-        <button type="submit" className="btn btn-primary" disabled={loading}>
-          {loading ? "Sending..." : "Verify Email"}
+        <button type="submit" className="btn btn-primary" disabled={isLoading}>
+          {isLoading ? "Sending..." : "Verify Email"}
         </button>
       </form>
       {error && <div className="alert alert-danger mt-2">{error}</div>}

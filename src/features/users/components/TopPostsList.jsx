@@ -15,15 +15,23 @@ const TopPostsList = () => {
           </div>
         ) : isError ? (
           <div className="alert alert-danger">
-            Error loading top posts. <button className="btn btn-sm btn-danger ms-2" onClick={refetch}>Retry</button>
+            Error loading top posts.{" "}
+            <button className="btn btn-sm btn-danger ms-2" onClick={refetch}>
+              Retry
+            </button>
           </div>
         ) : (
           <ul className="list-group list-group-flush">
             {posts && posts.length > 0 ? (
               posts.map((post) => (
-                <li key={post.id} className="list-group-item d-flex justify-content-between align-items-center">
+                <li
+                  key={post.id}
+                  className="list-group-item d-flex justify-content-between align-items-center"
+                >
                   <span className="fw-medium">{post.title}</span>
-                  <span className="badge bg-primary">{post.repliesCount} replies</span>
+                  <span className="badge bg-primary">
+                    {typeof post.repliesCount === "number" ? post.repliesCount : 0} replies
+                  </span>
                 </li>
               ))
             ) : (
