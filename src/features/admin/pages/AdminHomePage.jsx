@@ -1,5 +1,7 @@
+import UserHomePage from "../../users/pages/UserHomePage";
+
 const AdminHomePage = () => {
-  return <h1>Admin Home Page</h1>;
+  return <UserHomePage isAdmin={true}/>;
 };
 
 export default AdminHomePage;

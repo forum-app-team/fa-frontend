@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-export default function ConfirmationPopup({ show, onHide, bodyContent, handlerRef }) {
+export default function ConfirmationPopup({ show, onHide, title, bodyContent, handlerRef }) {
   const handleClick = async () => {
     try {
         await handlerRef.current();
@@ -18,7 +18,7 @@ export default function ConfirmationPopup({ show, onHide, bodyContent, handlerRe
       keyboard={false}
     >
       <Modal.Header closeButton>
-        {/*<Modal.Title>Modal title</Modal.Title>*/}
+        <Modal.Title>{title ?? ''}</Modal.Title>
       </Modal.Header>
       <Modal.Body> {bodyContent}</Modal.Body>
       <Modal.Footer>
