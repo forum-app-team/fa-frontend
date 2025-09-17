@@ -3,20 +3,19 @@ import authReducer from "../features/auth/store/auth.slice";
 import authListenerMiddleware from "../features/auth/store/auth.listener";
 import { adminUserApi } from "../features/admin/users.api";
 import messageReducer from "../features/messages/store/message.slice";
+import { normalUserApi } from "@/features/users/store/users.slice.js";
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
     [adminUserApi.reducerPath]: adminUserApi.reducer,
     message: messageReducer,
-    // Add your feature reducer here:
-    // posts: postsReducer,
-    // etc...
+    [normalUserApi.reducerPath]: normalUserApi.reducer,
   },
   middleware: (getDefault) =>
     getDefault()
       .prepend(authListenerMiddleware.middleware)
-      .concat(adminUserApi.middleware),
+      .concat(adminUserApi.middleware, normalUserApi.middleware),
 });
 
 export { store };
