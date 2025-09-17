@@ -16,7 +16,9 @@ const formatDate = (iso) => {
 
 // Avatar component: shows profile image if available, otherwise generates initials
 const Avatar = ({ imageUrl, firstName, lastName }) => {
-  const initials = `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
+  const initials = `${firstName?.[0] || ""}${
+    lastName?.[0] || ""
+  }`.toUpperCase();
   if (imageUrl) {
     return (
       <img
@@ -99,21 +101,35 @@ const ProfileHeader = () => {
               <>
                 <h2 className="h4 mb-1">
                   {/* Capitalize first/last name, show verification badge */}
-                  {(profile.firstName ? profile.firstName.charAt(0).toUpperCase() + profile.firstName.slice(1) : "")} {profile.lastName ? profile.lastName.charAt(0).toUpperCase() + profile.lastName.slice(1) : ""}
+                  {profile.firstName
+                    ? profile.firstName.charAt(0).toUpperCase() +
+                      profile.firstName.slice(1)
+                    : ""}{" "}
+                  {profile.lastName
+                    ? profile.lastName.charAt(0).toUpperCase() +
+                      profile.lastName.slice(1)
+                    : ""}
                   {emailVerified === false && (
-                    <span className="badge text-bg-warning align-middle" aria-label="Email unverified">
+                    <span
+                      className="badge text-bg-warning align-middle"
+                      aria-label="Email unverified"
+                    >
                       Unverified
                     </span>
                   )}
                   {emailVerified === true && (
-                    <span className="badge text-bg-success align-middle" aria-label="Email verified">
+                    <span
+                      className="badge text-bg-success align-middle"
+                      aria-label="Email verified"
+                    >
                       Verified
                     </span>
                   )}
                 </h2>
                 {/* Show member since date below name and badge */}
                 <div className="small text-muted mt-1">
-                  Member since {profile.dateJoined ? formatDate(profile.dateJoined) : "-"}
+                  Member since{" "}
+                  {profile.dateJoined ? formatDate(profile.dateJoined) : "-"}
                 </div>
               </>
             )}

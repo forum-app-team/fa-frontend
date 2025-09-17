@@ -32,7 +32,6 @@ const UserProfile = () => {
       </header>
 
       <ProfileHeader />
-
       {showEdit && (
         <section style={{ border: "1px solid #ccc", padding: "1rem" }}>
           <h2>Edit Profile</h2>

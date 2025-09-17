@@ -17,7 +17,11 @@ const store = configureStore({
   middleware: (getDefault) =>
     getDefault()
       .prepend(authListenerMiddleware.middleware)
-      .concat(adminUserApi.middleware, adminPostApi.middleware, normalUserApi.middleware),
+      .concat(
+        adminUserApi.middleware,
+        adminPostApi.middleware,
+        normalUserApi.middleware
+      ),
 });
 
 export { store };

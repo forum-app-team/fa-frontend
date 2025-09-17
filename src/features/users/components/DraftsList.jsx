@@ -30,8 +30,10 @@ const DraftsList = () => {
                 >
                   <span className="fw-medium">{draft.title}</span>
                   <span className="badge bg-secondary">
-                    Last updated: {" "}
-                    {draft.updatedAt ? new Date(draft.updatedAt).toLocaleDateString() : "-"}
+                    Last updated:{" "}
+                    {draft.updatedAt
+                      ? new Date(draft.updatedAt).toLocaleDateString()
+                      : "-"}
                   </span>
                 </li>
               ))

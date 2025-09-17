@@ -30,7 +30,10 @@ const TopPostsList = () => {
                 >
                   <span className="fw-medium">{post.title}</span>
                   <span className="badge bg-primary">
-                    {typeof post.repliesCount === "number" ? post.repliesCount : 0} replies
+                    {typeof post.repliesCount === "number"
+                      ? post.repliesCount
+                      : 0}{" "}
+                    replies
                   </span>
                 </li>
               ))
