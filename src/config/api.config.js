@@ -30,8 +30,14 @@ const API_CONFIG = {
       UNBAN: (id) => `/api/posts/${id}/unban`,  // POST, Admin
       RECOVER: (id) => `/api/posts/${id}/recover`,  // POST, Admin
 
+      REPLIES: {
+        LIST: (postId) => `/api/posts/${postId}/replies`,
+        CREATE: (postId) => `/api/posts/${postId}/replies`,
+        UPDATE: (postId, id) => `/api/posts/${postId}/replies/${id}`,
+        DELETE: (postId, id) => `/api/posts/${postId}/replies/${id}`,
+      },
+
     },
-    // etc...
   },
 };
 

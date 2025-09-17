@@ -10,6 +10,8 @@ import {
   banPost, unbanPost, recoverPost,
   publishPost,
 } from "@/features/posts/api/posts.api";
+import RepliesSection from "@/features/posts/components/RepliesSection";
+import AttachmentList from "@/features/posts/components/AttachmentList";
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -20,7 +22,7 @@ const PostDetail = () => {
   const [error, setError] = useState(null);
 
   const isOwner = useMemo(() => post && user && post.userId === user.userId, [post, user]);
-  const isAdmin = user?.role === "admin" || user?.role === "super-admin";
+  const isAdmin = user?.role === "admin" || user?.role === "super";
 
   const load = async () => {
     try {
@@ -51,7 +53,7 @@ const PostDetail = () => {
   if (!post) return <div className="container py-4">{error ? <div className="alert alert-danger">{error}</div> : "Loading..."}</div>;
 
   return (
-      <div className="container py-4">
+      <div className="container py-4 text-start">
         {error && <div className="alert alert-danger">{error}</div>}
 
         {!edit ? (
@@ -60,11 +62,21 @@ const PostDetail = () => {
                 <h2>{post.title}</h2>
                 <span className="badge text-bg-secondary">{post.status}{post.isArchived ? " (archived)" : ""}</span>
               </div>
-              <p className="mt-3">{post.content}</p>
               <div className="text-muted small">
                 Posted: {new Date(post.postDate).toLocaleString()}
                 {post.lastEditedAt && <> • Last edited: {new Date(post.lastEditedAt).toLocaleString()}</>}
               </div>
+              <p className="mt-3">{post.content}</p>
+
+
+              {post.attachments?.length > 0 && (
+                  <div className="mb-3 border-top">
+                    <h4 className="m-0 mb-2 text-start">Attachments</h4>
+                    <AttachmentList attachments={post.attachments} />
+                  </div>
+              )}
+
+              {post && <RepliesSection post={post} />}
 
               <div className="mt-4 d-flex gap-2 flex-wrap">
                 {isOwner && !["Banned","Deleted"].includes(post.status) && (
@@ -107,6 +119,7 @@ const PostDetail = () => {
                 <label className="form-label">Content</label>
                 <textarea className="form-control" rows={6} value={form.content} onChange={(e)=>setForm({...form, content:e.target.value})} required />
               </div>
+
               <div className="d-flex gap-2">
                 <button className="btn btn-primary">Save</button>
                 <button type="button" className="btn btn-secondary" onClick={()=>setEdit(false)}>Cancel</button>
