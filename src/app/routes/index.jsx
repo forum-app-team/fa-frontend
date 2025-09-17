@@ -33,7 +33,6 @@ const AppRoutes = () => {
           <Route path={PATHS.POST_DETAIL} element={<PostDetail />} />
           <Route path={PATHS.POST_NEW} element={<NewPost />} />
           <Route path={PATHS.POST_EDIT} element={<EditPost />} />
-
         </Route>
 
         {/* Admin routes */}
