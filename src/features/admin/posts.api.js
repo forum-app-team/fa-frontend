@@ -14,7 +14,7 @@ export const adminPostApi = createApi({
   tagTypes: ['Post'],
   endpoints: (build) => ({
     listPosts: build.query({
-      query: ({ offset = 0, limit = 50, status = 'published', field = 'title', q, sort = 'createdAt', ascending = false } = {}) => ({
+      query: ({ offset = 0, limit = 50, status = 'Published', field = 'title', q, sort = 'createdAt', ascending = false } = {}) => ({
         params: { offset, limit, status, sort, field, q, ascending },
       }),
       providesTags: (res) =>

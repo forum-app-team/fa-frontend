@@ -1,17 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { resolvePath } from "@/app/lib/resolvePath";
-import { PATHS } from "@/app/config/paths";
-
-import { Container, Row, Col, InputGroup, Form, Button, Table, Pagination, Spinner, Alert, Nav } from "react-bootstrap";
-import { Dropdown, ButtonGroup, SplitButton } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { Container, Row, Col, InputGroup, Form, Button, Spinner, Alert, Nav } from "react-bootstrap";
+import { Dropdown, SplitButton } from "react-bootstrap";
 import * as Icon from 'react-bootstrap-icons';
+
 import PostTable from "../components/PostTable";
 import { usePagination } from "@/hooks/usePagination";
-import { adminPostApi, useLazyListPostsQuery } from "../../admin/posts.api";
+import PaginationComponent from "@/components/Pagination";
+import { useLazyListPostsQuery } from "../../admin/posts.api";
 
-export default function UserHomePage() {/*
+export default function UserHomePage({isAdmin}) {/*
   const navigate = useNavigate();
   const myUserId = useSelector((s) => s.auth?.user?.id);
 
@@ -186,14 +184,11 @@ export default function UserHomePage() {/*
         </ul>
       </div>
   );*/
-  const posts = [
-    { id: 1, title: "Hello Forum", author: "alice", createdAt: "2025-09-10T14:32:00Z" },
-    { id: 2, title: "Tips & Tricks", author: "bob", createdAt: "2025-09-12T09:05:00Z" },
-  ];
-  const [queryPosts, { data, error, isFetching, isError }] = useLazyListPostsQuery();
+  const [queryPosts, { data, error, isFetching, isError, reset }] = useLazyListPostsQuery();
   const { page, limit, offset, setPage, setLimit, next, prev, pageCountFrom } = usePagination();
   const pageCount = pageCountFrom(data?.total ?? 0);
-  console.log(data);
+  if (page > pageCount)
+    setPage(pageCount);
 
   const qRef = useRef(null);
   const initState = {
@@ -204,14 +199,16 @@ export default function UserHomePage() {/*
   };
   const [ postFilter, setPostFilter ] = useState(initState);
   const FIELD_OPTIONS = ['title', 'author'];
+
   const handleSearchFieldChange = (eventKey) => {
     if (eventKey === 'reset') {
       setPostFilter(() => ({...initState}));
       qRef.current.value = "";
-      queryPosts();
+      queryPosts({limit});
     } else
       setPostFilter((state) => ({...state, field: eventKey}));
   };
+
   const handleSearch = (event) => {
     event.preventDefault();
     queryPosts({
@@ -221,31 +218,34 @@ export default function UserHomePage() {/*
     });
   };
 
-  const lastReq = useRef(null);
   useEffect(() => {
-    lastReq.current?.abort();
-    lastReq.current = queryPosts({
+    reset();
+    const req = queryPosts({
       ...postFilter,
       q: qRef.current.value,
       limit, offset,
     });
-    return () => lastReq.current?.abort();
-  }, [postFilter.status, postFilter.sort, postFilter.ascending, limit, offset]);
+    return () => req.abort();
+  }, [queryPosts, postFilter.status, postFilter.sort, postFilter.ascending, limit, offset]);
 
   return (
     <Container fluid="md" className="py-3">
-      <Nav variant="tabs" className="mb-3" activeKey={postFilter.status} onSelect={(key) => setPostFilter(() => ({...initState, status: key}))}>
-        <Nav.Item>
-          <Nav.Link eventKey="Published">Published</Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="Banned">Banned</Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="Deleted">Deleted</Nav.Link>
-        </Nav.Item>
-      </Nav>
-      <pre>{JSON.stringify(postFilter)}</pre>
+      <h2 className="mb-0">{postFilter.status} Posts</h2>
+      {isAdmin &&
+        <Nav variant="tabs" className="mb-3" activeKey={postFilter.status} onSelect={
+          (key) => setPostFilter((state) => (isAdmin ? {...initState, status: key} : state))
+        }>
+          <Nav.Item>
+            <Nav.Link eventKey="Published">Published</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="Banned">Banned</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="Deleted">Deleted</Nav.Link>
+          </Nav.Item>
+        </Nav>
+      }
 
       <Row className="g-2 align-items-stretch mb-3">
         {/* Title/Author search */}
@@ -294,7 +294,7 @@ export default function UserHomePage() {/*
               <option value="replyCount">Replies</option>
             </Form.Select>
             <Button
-              variant="outline-primary"
+              variant="outline-secondary"
               onClick={() => setPostFilter((state) => ({...state, ascending: !state.ascending}))}
             >
               {postFilter.ascending ? <Icon.ArrowUp/> : <Icon.ArrowDown/>}
@@ -315,42 +315,19 @@ export default function UserHomePage() {/*
         </div>
       ) : isError ? (
         <Alert variant="danger" className="border">{JSON.stringify(error)}</Alert>
-      ) : data?.total === 0 ? (
-        <Alert variant="light" className="border">No posts found.</Alert>
-      ) : <PostTable posts={data?.items}/>
+      ) : <PostTable posts={data?.items} isAdmin={isAdmin}/>
       }
 
       {/* Pagination */}
-      <Row className="align-items-center g-2">
-        <Col xs="auto">
-          <div className="d-flex align-items-center gap-2">
-            <Form.Select
-              id="page-size"
-              size="sm"
-              style={{ width: 80 }}
-              value={limit}
-              onChange={(e) => setLimit(Number(e.currentTarget.value))}
-            >
-              {[10, 20, 50].map(n => <option key={n} value={n}>{n}</option>)}
-            </Form.Select>
-            <Form.Label htmlFor="page-size" className="mb-0">/ page</Form.Label>
-          </div>
-        </Col>
-
-        <Col xs="auto" className="ms-auto">
-          <Pagination size="sm" className="mb-0">
-            <Pagination.First onClick={() => setPage(1)} disabled={page === 1}/>
-            <Pagination.Prev onClick={prev} disabled={page === 1}/>
-            {Array.from({ length: pageCount }, (_, i) => i + 1).map((i) => (
-              <Pagination.Item key={i} active={i === page} onClick={() => setPage(i)}>
-                {i}
-              </Pagination.Item>
-            ))}
-            <Pagination.Next onClick={next} disabled={page === pageCount}/>
-            <Pagination.Last onClick={() => setPage(pageCount)} disabled={page === pageCount}/>
-          </Pagination>
-        </Col>
-      </Row>
+      <PaginationComponent
+        page={page}
+        limit={limit}
+        setPage={setPage}
+        setLimit={setLimit}
+        prev={prev}
+        next={next}
+        pageCount={pageCount}
+      />
 
     </Container>
   );

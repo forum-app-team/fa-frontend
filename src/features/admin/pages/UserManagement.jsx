@@ -1,21 +1,20 @@
 import { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Container } from 'react-bootstrap';
 import { useListUsersQuery, useUpdateUserStatusMutation, useUpdateUserRolesMutation } from '../users.api';
 import UsersTable from '../components/UsersTable';
 import ConfirmationPopup from '../components/ConfirmationPopup';
-import { useSelector } from 'react-redux';
+import { usePagination } from "@/hooks/usePagination";
+import PaginationComponent from "@/components/Pagination";
 
 
 const UserManagement = () => {
   const user = useSelector((state) => state.auth.user);
-  const [ page, setPage ] = useState(1);
-  const [ pageSize, setPageSize ] = useState(20);
-  const { data, isFetching, isError } = useListUsersQuery({
-    offset: (page - 1) * pageSize,
-    limit: pageSize,
-  });
-
-  const total = data?.totalCount ?? 0;
-  const pageCount = Math.max(1, Math.ceil(total / pageSize));
+  const { page, limit, offset, setPage, setLimit, next, prev, pageCountFrom } = usePagination();
+  const { data, isFetching, isError } = useListUsersQuery({ offset, limit });
+  const pageCount = pageCountFrom(data?.totalCount ?? 0);
+  if (page > pageCount)
+    setPage(pageCount);
 
   const [ showPopup, setShowPopup ] = useState(false);
   const [ popupContent, setPopupContent ] = useState('');
@@ -36,8 +35,8 @@ const UserManagement = () => {
   };
 
   return (
-    <>
-      <h1>User Management</h1>
+    <Container fluid="md" className="py-3">
+      <h2 className="mb-3">User Management</h2>
       {isFetching && <small>Loading...</small>}
       {isError && <small>Failed to load.</small>}
       <UsersTable 
@@ -51,7 +50,18 @@ const UserManagement = () => {
         onHide={() => setShowPopup(false)}
         handlerRef={popupHandlerRef}
       />
-    </>
+
+      {/* Pagination */}
+      <PaginationComponent
+        page={page}
+        limit={limit}
+        setPage={setPage}
+        setLimit={setLimit}
+        prev={prev}
+        next={next}
+        pageCount={pageCount}
+      />
+    </Container>
   );
 };
 

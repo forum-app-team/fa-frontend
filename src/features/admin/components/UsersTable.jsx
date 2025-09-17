@@ -3,12 +3,13 @@ import Button from 'react-bootstrap/Button';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import { Link, generatePath } from 'react-router-dom';
 import { PATHS } from '@/app/config/paths';
+import { Alert } from 'react-bootstrap';
 
 export default function UsersTable({ users = [], isSuper, onToggleState }) {
   const fmt = (iso) => (iso ? new Date(iso).toLocaleDateString() : '');
 
   if (!users.length) {
-    return <p className="text-muted m-3">No users found.</p>;
+    return <Alert variant="light" className="border">No users found.</Alert>;
   }
 
   return (
