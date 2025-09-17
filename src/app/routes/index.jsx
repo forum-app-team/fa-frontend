@@ -6,6 +6,7 @@ import HomeRoute from "./HomeRoute";
 import GlobalLayout from "../../components/GlobalLayout";
 import Login from "../../features/auth/pages/Login";
 import Register from "../../features/auth/pages/Register";
+import VerifyEmail from "../../features/auth/pages/VerifyEmail";
 import ContactAdmin from "../../features/messages/pages/ContactAdmin";
 import UserManagement from "../../features/admin/pages/UserManagement";
 import MessageManagement from "../../features/messages/pages/MessageManagement";
@@ -25,6 +26,7 @@ const AppRoutes = () => {
         <Route path={PATHS.LOGIN} element={<Login />} />
         <Route path={PATHS.REGISTER} element={<Register />} />
         <Route path={PATHS.CONTACT_US} element={<ContactAdmin />} />
+        <Route path={PATHS.VERIFY_EMAIL} element={<VerifyEmail />} />
 
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
@@ -33,7 +35,6 @@ const AppRoutes = () => {
           <Route path={PATHS.POST_DETAIL} element={<PostDetail />} />
           <Route path={PATHS.POST_NEW} element={<NewPost />} />
           <Route path={PATHS.POST_EDIT} element={<EditPost />} />
-
         </Route>
 
         {/* Admin routes */}
