@@ -8,6 +8,8 @@ const API_CONFIG = {
       LOGOUT: "/api/auth/logout",
       REFRESH: "/api/auth/refresh",
       UPDATE_IDENTITY: "/api/auth/identity",
+      EMAIL_VERIFICATION_SEND: "/api/auth/verify-email/send",
+      EMAIL_VERIFICATION_VERIFY: "/api/auth/verify-email/verify",
     },
     ADMIN: {
       USERS: "/api/auth/admin/users",

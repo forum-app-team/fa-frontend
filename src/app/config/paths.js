@@ -4,6 +4,7 @@ const PATHS = {
   REGISTER: "/users/register",
   LOGIN: "/users/login",
   CONTACT_US: "/contactus",
+  VERIFY_EMAIL: "/verify-email", // email verification
 
   // Authenticated user paths
   HOME: "/home",
