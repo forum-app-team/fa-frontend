@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useGetProfileQuery } from "../store/users.slice";
 import { useSelector } from "react-redux";
 
+import { resendVerificationEmail } from "../users.api";
+
 // Format ISO date string to readable format for display
 const formatDate = (iso) => {
   try {
@@ -134,6 +136,11 @@ const ProfileHeader = () => {
                       Verified
                     </span>
                   )}
+
+      {emailVerified === false && (<button onClick={resendVerificationEmail} disabled={emailVerified}>
+        Send Verification Email
+      </button>)}
+
                 </h2>
                 {/* Show member since date below name and badge */}
                 <div className="small text-muted mt-1">

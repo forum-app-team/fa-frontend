@@ -3,6 +3,7 @@ import apiClient from "@/libs/axios";
 import { API_CONFIG } from "@/config/api.config.js";
 
 const USERS_API = API_CONFIG.ENDPOINTS.USERS;
+const AUTH_API = API_CONFIG.ENDPOINTS.AUTH;
 
 const getMyProfile = async () => {
   const response = await apiClient.post(
@@ -40,4 +41,11 @@ const updateUserProfile = async (id, profile) => {
   return response.data;
 }
 
-export {getMyProfile, getUserProfile, updateUserProfile};
+const resendVerificationEmail = async () => {
+  const response = await apiClient.post(
+    AUTH_API.EMAIL_VERIFICATION_SEND
+  );
+  return response.data;
+} 
+
+export {getMyProfile, getUserProfile, updateUserProfile, resendVerificationEmail};
