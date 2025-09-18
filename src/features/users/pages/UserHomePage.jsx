@@ -9,8 +9,11 @@ import { usePagination } from "@/hooks/usePagination";
 import PaginationComponent from "@/components/Pagination";
 import { useLazyListPostsQuery, useBanPostMutation, useUnbanPostMutation, useRecoverPostMutation } from "../../admin/posts.api";
 import ConfirmationPopup from "../../admin/components/ConfirmationPopup";
+import { useSelector } from "react-redux";
 
-export default function UserHomePage({isAdmin}) {/*
+export default function UserHomePage({isAdmin}) {
+  const emailVerified = useSelector((s) => s.auth.user?.emailVerified);
+  /*
   const navigate = useNavigate();
   const myUserId = useSelector((s) => s.auth?.user?.id);
 
@@ -327,9 +330,9 @@ export default function UserHomePage({isAdmin}) {/*
         </Col>
 
         {/* Add Post button pinned right on md+; wraps on mobile */}
-        <Col xs="auto" className="ms-md-auto">
+        {emailVerified && <Col xs="auto" className="ms-md-auto">
           <Button as={Link} to="/posts/new">New Post</Button>
-        </Col>
+        </Col>}
       </Row>
 
       {/* Content */}

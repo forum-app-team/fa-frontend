@@ -21,7 +21,7 @@ export default function PostTable({ posts = [], isAdmin, status = 'Published', o
               <th style={{width: "16%"}}>Date</th>
               <th style={{width: "8%"}}>Action</th>
             </> :
-            <th style={{width: "20%"}}>Date</th>
+            <th style={{width: "24%"}}>Date</th>
           }
         </tr>
       </thead>

@@ -31,7 +31,7 @@ export const normalUserApi = createApi({
   endpoints: (build) => ({
     getProfile: build.query({
       query: (userId) => ({ url: API_CONFIG.ENDPOINTS.USERS.PROFILE(userId) }),
-      providesTags: (r, e, userId) => [{ type: 'Profile', id: userId }],
+      providesTags: (res) => [{ type: 'Profile', id: res.profile?.userId }],
       keepUnusedDataFor: 300,
     }),
 

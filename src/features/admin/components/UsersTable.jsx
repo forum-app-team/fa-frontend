@@ -35,7 +35,7 @@ const UserRow = ({user, isSuper, onToggleState}) => {
             type="checkbox"
             variant="outline-primary"
             checked={user.role === 'admin'}
-            onChange={() => onToggleState({...u, isActive: undefined})}
+            onChange={() => onToggleState({...user, isActive: undefined})}
             disabled={!user.isActive}
             className="text-capitalize"
           >{user.role}</ToggleButton>
@@ -46,7 +46,7 @@ const UserRow = ({user, isSuper, onToggleState}) => {
         <Button
           size="sm"
           variant={user.isActive ? 'danger' : 'outline-success'}
-          onClick={() => onToggleState({...u, role: undefined})}
+          onClick={() => onToggleState({...user, role: undefined})}
           disabled={user.role === 'admin'}
         >
           {user.isActive ? 'Ban' : 'Unban'}
