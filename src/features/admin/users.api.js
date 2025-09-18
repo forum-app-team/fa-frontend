@@ -5,11 +5,7 @@ import apiClient from '../../libs/axios';
 const axiosBaseQuery =
   ({ baseUrl } = { baseUrl: "" }) =>
   async ({ url = '', method, data, params }, api) => {
-    try {
-      return await apiClient({ url: baseUrl + url, method, data, params });
-    } catch (err) {
-      console.error(err);
-    }
+    return await apiClient({ url: baseUrl + url, method, data, params });
   };
 
 export const adminUserApi = createApi({
