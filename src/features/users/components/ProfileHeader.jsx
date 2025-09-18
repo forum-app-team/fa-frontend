@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useGetProfileQuery } from "../store/users.slice";
 import { useSelector } from "react-redux";
 
@@ -16,16 +17,24 @@ const formatDate = (iso) => {
 
 // Avatar component: shows profile image if available, otherwise generates initials
 const Avatar = ({ imageUrl, firstName, lastName }) => {
+  const [imageError, setImageError] = useState(false);
   const initials = `${firstName?.[0] || ""}${
     lastName?.[0] || ""
   }`.toUpperCase();
-  if (imageUrl) {
+
+  // Reset image error when imageUrl changes
+  useEffect(() => {
+    setImageError(false);
+  }, [imageUrl]);
+
+  if (imageUrl && !imageError) {
     return (
       <img
         src={imageUrl}
         alt="Profile"
         className="rounded-circle border object-fit-cover"
         style={{ width: 96, height: 96 }}
+        onError={() => setImageError(true)}
       />
     );
   }

@@ -14,6 +14,7 @@ import AttachmentList from "@/features/posts/components/AttachmentList";
 import PostAuthorInfo from "@/features/posts/components/PostAuthorInfo";
 import { resolvePath } from "@/app/lib/resolvePath";
 import { PATHS } from "@/app/config/paths";
+import { useRecordHistoryViewMutation } from "@/features/users/store/users.slice";
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -21,6 +22,7 @@ const PostDetail = () => {
   const { user } = useSelector((s) => s.auth);
   const [post, setPost] = useState(null);
   const [error, setError] = useState(null);
+  const [recordHistoryView] = useRecordHistoryViewMutation();
 
   const isOwner = useMemo(() => post && user && post.userId === user.id, [post, user]);
   const isAdmin = user?.role === "admin" || user?.role === "super";
@@ -34,6 +36,14 @@ const PostDetail = () => {
       setError(e?.response?.data?.message || "Failed to load post");
     }
   };
+
+
+  // Record a view for published posts (non-blocking)
+  useEffect(() => {
+    if (post && post.status === "Published") {
+      recordHistoryView({ postId: id }).catch(() => {});
+    }
+  }, [id, post?.status, recordHistoryView]);
 
   useEffect(() => { load(); }, [id]);
 

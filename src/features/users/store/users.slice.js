@@ -76,6 +76,45 @@ export const normalUserApi = createApi({
       }),
       invalidatesTags: ["Email"],
     }),
+
+    // History: list with pagination and filters
+    listHistory: build.query({
+      query: (params = {}) => ({ url: "/api/history", params }),
+      providesTags: (res) =>
+        res?.items
+          ? [
+              { type: "History", id: "LIST" },
+              ...res.items.map((i) => ({ type: "History", id: i.historyId })),
+            ]
+          : [{ type: "History", id: "LIST" }],
+    }),
+
+    // History: delete one entry
+    deleteHistoryEntry: build.mutation({
+      query: (id) => ({ url: `/api/history/${id}`, method: "DELETE" }),
+      invalidatesTags: (r, e, id) => [
+        { type: "History", id },
+        { type: "History", id: "LIST" },
+      ],
+    }),
+
+    // History: clear all
+    clearHistory: build.mutation({
+      query: () => ({ url: "/api/history", method: "DELETE" }),
+      invalidatesTags: [{ type: "History", id: "LIST" }],
+    }),
+
+    // History: record a view
+    recordHistoryView: build.mutation({
+      query: (body) => ({ url: "/api/history/views", method: "POST", data: body }),
+      invalidatesTags: [{ type: "History", id: "LIST" }],
+    }),
+
+    // History: stats (optional UI)
+    getHistoryStats: build.query({
+      query: (params = {}) => ({ url: "/api/history/stats", params }),
+      providesTags: [{ type: "History", id: "STATS" }],
+    }),
   }),
 });
 
@@ -85,4 +124,9 @@ export const {
   useGetDraftsQuery,
   useUpdateProfileImageMutation,
   useRequestEmailVerificationMutation,
+  useListHistoryQuery,
+  useDeleteHistoryEntryMutation,
+  useClearHistoryMutation,
+  useRecordHistoryViewMutation,
+  useGetHistoryStatsQuery,
 } = normalUserApi;
