@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createPost, publishPost } from "@/features/posts/api/posts.api";
+import AttachmentUploader from "@/features/posts/components/AttachmentUploader";
 
 const MAX_TITLE = 200;
 
@@ -11,6 +12,7 @@ export default function NewPostPage() {
   const isVerified = !!user?.emailVerified;
 
   const [form, setForm] = useState({ title: "", content: "" });
+  const [attachments, setAttachments] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
@@ -25,6 +27,7 @@ export default function NewPostPage() {
       const draft = await createPost({
         title: form.title.trim(),
         content: form.content.trim(),
+        attachments,
       });
       if (publish) {
         await publishPost(draft.id); // publish immediately
@@ -72,6 +75,11 @@ export default function NewPostPage() {
                 placeholder="Write your post here..."
                 required
             />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Attachments</label>
+            <AttachmentUploader value={attachments} onChange={setAttachments} disabled={submitting} />
           </div>
 
           <div className="d-flex gap-2">
