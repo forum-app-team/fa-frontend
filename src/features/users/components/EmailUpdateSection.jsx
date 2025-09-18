@@ -1,14 +1,32 @@
-// TODO: Add logic to request verification code, submit code + new email, and mark user as unverified until confirmed
+import { useState } from "react";
+import UpdateIdentityForm from "@/features/auth/components/UpdateIdentityForm"
+
 const EmailUpdateSection = () => {
+  const [mode, setMode] = useState("email"); // "email" or "password"
+
   return (
     <section>
-      <h3>Update Email (Verification Required)</h3>
-      <form>
-        <input name="newEmail" placeholder="New email" />
-        <button type="button">Request Code</button>
-        <input name="code" placeholder="Verification code" />
-        <button type="button">Confirm</button>
-      </form>
+      <div>
+        <h3>Change Email/Password</h3>
+      </div>
+
+      <hr style={{ margin: "20px 0" }} />
+
+      <div style={{ marginBottom: "20px" }}>
+        <button
+          onClick={() => setMode("email")}
+          style={{ marginRight: "10px" }}
+        >
+          Change Email
+        </button>
+        <button onClick={() => setMode("password")}>
+          Change Password
+        </button>
+      </div>
+
+      {mode && (
+        <UpdateIdentityForm mode={mode} />
+      )}
     </section>
   );
 };
