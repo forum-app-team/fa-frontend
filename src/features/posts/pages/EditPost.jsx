@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { getPostDetail, updatePost } from "@/features/posts/api/posts.api";
 import { PATHS } from "@/app/config/paths";
 import { resolvePath } from "@/app/lib/resolvePath";
+import AttachmentUploader from "@/features/posts/components/AttachmentUploader";
 
 export default function PostEditPage() {
     const { id } = useParams();
@@ -18,6 +19,7 @@ export default function PostEditPage() {
     const [post, setPost] = useState(null);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const [attachments, setAttachments] = useState([]);
 
     const canEdit = useMemo(() => {
         return post && myUserId && post.userId === myUserId;
@@ -35,6 +37,7 @@ export default function PostEditPage() {
                 setPost(data);
                 setTitle(data?.title || "");
                 setContent(data?.content || "");
+                setAttachments(data.attachments || []);
             } catch (e) {
                 setError(e?.response?.data?.message || e.message || "Failed to load post");
             } finally {
@@ -51,7 +54,7 @@ export default function PostEditPage() {
         }
         setSaving(true);
         try {
-            await updatePost(id, { title: title.trim(), content });
+            await updatePost(id, { title: title.trim(), content, attachments });
             // back to detail after successful save
             navigate(resolvePath(PATHS.POST_DETAIL, { id }));
         } catch (e) {
@@ -118,6 +121,11 @@ export default function PostEditPage() {
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                     />
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Attachments</label>
+                    <AttachmentUploader value={attachments} onChange={setAttachments} disabled={saving} />
                 </div>
 
                 <button className="btn btn-primary" type="submit" disabled={saving}>

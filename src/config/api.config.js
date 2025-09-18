@@ -33,6 +33,13 @@ const API_CONFIG = {
 
       TOP_POSTS: (limit = 3) => `/api/posts/top?limit=${limit}`,
       DRAFTS: "/api/posts/drafts",
+
+      REPLIES: {
+        LIST: (postId) => `/api/posts/${postId}/replies`,
+        CREATE: (postId) => `/api/posts/${postId}/replies`,
+        UPDATE: (postId, id) => `/api/posts/${postId}/replies/${id}`,
+        DELETE: (postId, id) => `/api/posts/${postId}/replies/${id}`,
+      },
     },
     MESSAGES: {
       SEND: "/api/messages", // POST
