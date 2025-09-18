@@ -123,15 +123,7 @@ function ReplyNode({
                             Reply
                         </button>
                     )}
-                    {/*{canEdit && (*/}
-                    {/*    <button*/}
-                    {/*        className="btn btn-sm btn-secondary"*/}
-                    {/*        onClick={() => setEditing((v) => !v)}*/}
-                    {/*        title="Edit this comment"*/}
-                    {/*    >*/}
-                    {/*        Edit*/}
-                    {/*    </button>*/}
-                    {/*)}*/}
+
                     {canDelete && (
                         <button
                             className="btn btn-sm btn-danger"
