@@ -30,6 +30,16 @@ const API_CONFIG = {
       BAN: (id) => `/api/posts/${id}/ban`, // POST, Admin
       UNBAN: (id) => `/api/posts/${id}/unban`, // POST, Admin
       RECOVER: (id) => `/api/posts/${id}/recover`, // POST, Admin
+
+      TOP_POSTS: (limit = 3) => `/api/posts/top?limit=${limit}`,
+      DRAFTS: "/api/posts/drafts",
+
+      REPLIES: {
+        LIST: (postId) => `/api/posts/${postId}/replies`,
+        CREATE: (postId) => `/api/posts/${postId}/replies`,
+        UPDATE: (postId, id) => `/api/posts/${postId}/replies/${id}`,
+        DELETE: (postId, id) => `/api/posts/${postId}/replies/${id}`,
+      },
     },
     MESSAGES: {
       SEND: "/api/messages", // POST
@@ -38,14 +48,15 @@ const API_CONFIG = {
     },
     FILES: {
       // PRESIGN: "/api/files/presign",  // POST
-      DIRECT_UPLOAD: "/api/files/upload",  // POST
-      RETRIEVE: (objectKey) => `/api/files/retrieve/${objectKey}`,  // GET
+      DIRECT_UPLOAD: "/api/files/upload", // POST
+      RETRIEVE: (objectKey) => `/api/files/retrieve/${objectKey}`, // GET
     },
     USERS: {
       ME: "/api/users/profile/me", // GET
-      PROFILE: (id) => `/api/users/profile/${id}`, // GET, PATCH
-    }
-    // etc...
+      PROFILE: (userId) => `/api/users/profile/${userId}`,
+      PATCH_PROFILE: (userId) => `/api/users/profile/${userId}`,
+      UPDATE_PROFILE_IMAGE: (userId) => `/api/users/profile/${userId}`,
+    },
   },
 };
 

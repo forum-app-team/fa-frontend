@@ -15,9 +15,24 @@ const UserProfile = () => {
   const [showEditCreds, setShowEditCreds] = useState(false);
 
   return (
-    <div style={{ maxWidth: 960, margin: "0 auto", padding: "1rem", display: "grid", gap: "2rem" }}>
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <div
+      style={{
+        maxWidth: 960,
+        margin: "0 auto",
+        padding: "1rem",
+        display: "grid",
+        gap: "2rem",
+      }}
+    >
+      <header
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <h1>User Profile</h1>
+
         <div style={{display: "flex", gap: ".5rem"}}>
         <button onClick={() => {setShowEdit(v => false); setShowEditCreds(v => !v);}}>Edit Email/Password</button>
         <EditProfileButton onClick={() => {setShowEdit(v => !v); setShowEditCreds(v => false);}} />
@@ -27,14 +42,14 @@ const UserProfile = () => {
       <ProfileHeader />
 
     {showEditCreds && (
-              <section style={{ border: "1px solid #ccc", padding: "1rem" }}>
+        <section style={{ border: "1px solid #ccc", padding: "1rem" }}>
           {/* <h2>Edit Profile</h2> */}
           {/* <ProfileImageUploader /> */}
           <EmailUpdateSection />
         </section>
     )}
 
-      {/* TODO: Replace EditProfileButton toggle with navigation to a modal or route for editing profile fields (name, password, etc) */}
+
       {showEdit && (
         <section style={{ border: "1px solid #ccc", padding: "1rem" }}>
           <h2>Edit Profile</h2>

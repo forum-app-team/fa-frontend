@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import UpdateIdentityForm from "@/features/auth/components/UpdateIdentityForm"
 
 const EmailUpdateSection = () => {
@@ -27,6 +28,7 @@ const EmailUpdateSection = () => {
       {mode && (
         <UpdateIdentityForm mode={mode} />
       )}
+
     </section>
   );
 };

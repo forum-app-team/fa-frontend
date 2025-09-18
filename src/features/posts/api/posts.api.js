@@ -69,4 +69,24 @@ const recoverPost = async (id) => {
     return data;
 };
 
-export { listPublishedPosts, getPostDetail, createPost, updatePost, deletePost, publishPost, archivePost, unarchivePost, hidePost, unhidePost, banPost, unbanPost, recoverPost };
+const listReplies = async (postId) => {
+    const { data } = await apiClient.get(POSTS_API.REPLIES.LIST(postId));
+    return data;
+};
+
+const createReply = async (postId, payload) => {
+    const { data } = await apiClient.post(POSTS_API.REPLIES.CREATE(postId), payload);
+    return data;
+};
+
+const updateReply = async (postId, id, payload) => {
+    const { data } = await apiClient.put(POSTS_API.REPLIES.UPDATE(postId, id), payload);
+    return data;
+}
+;
+const deleteReply = async (postId, id) => {
+    const res = await apiClient.delete(POSTS_API.REPLIES.DELETE(postId, id));
+    return res.status === 204;
+};
+
+export { listPublishedPosts, getPostDetail, createPost, updatePost, deletePost, publishPost, archivePost, unarchivePost, hidePost, unhidePost, banPost, unbanPost, recoverPost, listReplies, createReply, updateReply, deleteReply };

@@ -7,6 +7,7 @@ import { PATHS } from '../app/config/paths';
 import { logout } from '../features/auth/store/auth.slice';
 import { logoutUser } from '../features/auth/api/auth.api';
 import { isAxiosError } from 'axios';
+import UserBadge from '../features/users/components/UserBadge';
 
 export const NavigationBar = () => {
   const user = useSelector((state) => state.auth.user);
@@ -34,7 +35,7 @@ export const NavigationBar = () => {
 
         <Navbar.Toggle aria-controls="main-nav" />
         <Navbar.Collapse id="main-nav">
-          <Nav className="ms-auto">
+          <Nav className="ms-auto align-items-center">
             {/* Admin/privileged links */}
             {user?.role !== 'normal' && user ? (
               <>
@@ -53,7 +54,9 @@ export const NavigationBar = () => {
               </>
             ) : (
               <>
-                <Nav.Link as={NavLink} to={generatePath(PATHS.PROFILE, {id: user.id ?? 0})}>{user.username ?? user.email ?? "Account"}</Nav.Link>
+                <Nav.Link as={NavLink} to={generatePath(PATHS.PROFILE, {id: user.id ?? 0})}>
+                  <UserBadge userId={user.id}/>
+                </Nav.Link>
                 <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
               </>
             )}

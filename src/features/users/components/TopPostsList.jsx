@@ -1,4 +1,6 @@
 import { useGetTopPostsQuery } from "@/features/users/store/users.slice";
+import { generatePath, Link } from "react-router-dom";
+import { PATHS } from "@/app/config/paths";
 
 const TopPostsList = () => {
   const { data: posts, isLoading, isError, refetch } = useGetTopPostsQuery(3);
@@ -15,15 +17,31 @@ const TopPostsList = () => {
           </div>
         ) : isError ? (
           <div className="alert alert-danger">
-            Error loading top posts. <button className="btn btn-sm btn-danger ms-2" onClick={refetch}>Retry</button>
+            Error loading top posts.{" "}
+            <button className="btn btn-sm btn-danger ms-2" onClick={refetch}>
+              Retry
+            </button>
           </div>
         ) : (
           <ul className="list-group list-group-flush">
             {posts && posts.length > 0 ? (
               posts.map((post) => (
-                <li key={post.id} className="list-group-item d-flex justify-content-between align-items-center">
-                  <span className="fw-medium">{post.title}</span>
-                  <span className="badge bg-primary">{post.repliesCount} replies</span>
+                <li
+                  key={post.id}
+                  className="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  {/*<span className="fw-medium">{post.title}</span>*/}
+                  <Link
+                    to={generatePath(PATHS.POST_DETAIL, { id: post.id })}
+                    className="fw-medium text-truncate text-nowrap text-decoration-none link-dark"
+                    title={post.title}
+                  >{post.title}</Link>
+                  <span className="badge bg-primary">
+                    {typeof post.repliesCount === "number"
+                      ? post.repliesCount
+                      : 0}{" "}
+                    replies
+                  </span>
                 </li>
               ))
             ) : (
