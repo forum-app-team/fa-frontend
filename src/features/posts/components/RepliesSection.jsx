@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { getPublicUsers } from "@/features/auth/api/publicUsers.api";
 import { listReplies, createReply, updateReply, deleteReply } from "@/features/posts/api/posts.api";
+import { getUserProfiles } from "@/features/users/api/users.api";
 import ReplyForm from "./ReplyForm";
-import ReplyThread from "./ReplyThread";
+import ReplyList from "./ReplyList";
+import PostAuthorInfo from "./PostAuthorInfo";
+
 
 export default function RepliesSection({ post }) {
     const me = useSelector((s) => s.auth?.user);
@@ -37,7 +39,7 @@ export default function RepliesSection({ post }) {
                 if (!active) return;
                 setNodes(data || []);
                 const ids = Array.from(new Set((flattenUsers(data))));
-                const map = await getPublicUsers(ids);
+                const map = await getUserProfiles(ids);
                 if (!active) return;
                 setNames(map || {});
             } catch (e) {
@@ -54,7 +56,7 @@ export default function RepliesSection({ post }) {
         const data = await listReplies(post.id);
         setNodes(data || []);
         const ids = Array.from(new Set((flattenUsers(data))));
-        const map = await getPublicUsers(ids);
+        const map = await getUserProfiles(ids);
         setNames(map || {});
     };
 
@@ -121,7 +123,7 @@ export default function RepliesSection({ post }) {
                 </div>
             )}
 
-            <ReplyThread
+            <ReplyList
                 nodes={nodes}
                 names={names}
                 meId={meId}

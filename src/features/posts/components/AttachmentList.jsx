@@ -41,7 +41,7 @@ export default function AttachmentList({ attachments = [] }) {
                     <div className="ms-2">
                         <button
                             type="button"
-                            className="btn btn-sm btn-primary"
+                            className="btn btn-outline-primary"
                             onClick={() => openUrl(urls[i])}
                             disabled={!urls[i]}
                             aria-disabled={!urls[i]}

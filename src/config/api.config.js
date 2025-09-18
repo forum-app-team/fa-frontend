@@ -8,27 +8,31 @@ const API_CONFIG = {
       LOGOUT: "/api/auth/logout",
       REFRESH: "/api/auth/refresh",
       UPDATE_IDENTITY: "/api/auth/identity",
+      EMAIL_VERIFICATION_SEND: "/api/auth/verify-email/send",
+      EMAIL_VERIFICATION_VERIFY: "/api/auth/verify-email/verify",
     },
     ADMIN: {
       USERS: "/api/auth/admin/users",
     },
-    // Add your endpoints here
     POSTS: {
-      LIST: "/api/posts",  // GET
-      DETAIL: (id) => `/api/posts/${id}`,  // GET
-      CREATE: "/api/posts",  // POST
-      UPDATE: (id) => `/api/posts/${id}`,  // PUT
-      DELETE: (id) => `/api/posts/${id}`,  // DELETE
+      LIST: "/api/posts", // GET
+      DETAIL: (id) => `/api/posts/${id}`, // GET
+      CREATE: "/api/posts", // POST
+      UPDATE: (id) => `/api/posts/${id}`, // PUT
+      DELETE: (id) => `/api/posts/${id}`, // DELETE
 
-      PUBLISH: (id) => `/api/posts/${id}/publish`,  // PUT
-      ARCHIVE: (id) => `/api/posts/${id}/archive`,  // POST
-      UNARCHIVE: (id) => `/api/posts/${id}/unarchive`,  // POST
-      HIDE: (id) => `/api/posts/${id}/hide`,  // POST
-      UNHIDE: (id) => `/api/posts/${id}/unhide`,  // POST
+      PUBLISH: (id) => `/api/posts/${id}/publish`, // PUT
+      ARCHIVE: (id) => `/api/posts/${id}/archive`, // POST
+      UNARCHIVE: (id) => `/api/posts/${id}/unarchive`, // POST
+      HIDE: (id) => `/api/posts/${id}/hide`, // POST
+      UNHIDE: (id) => `/api/posts/${id}/unhide`, // POST
 
-      BAN: (id) => `/api/posts/${id}/ban`,  // POST, Admin
-      UNBAN: (id) => `/api/posts/${id}/unban`,  // POST, Admin
-      RECOVER: (id) => `/api/posts/${id}/recover`,  // POST, Admin
+      BAN: (id) => `/api/posts/${id}/ban`, // POST, Admin
+      UNBAN: (id) => `/api/posts/${id}/unban`, // POST, Admin
+      RECOVER: (id) => `/api/posts/${id}/recover`, // POST, Admin
+
+      TOP_POSTS: (limit = 3) => `/api/posts/top?limit=${limit}`,
+      DRAFTS: "/api/posts/drafts",
 
       REPLIES: {
         LIST: (postId) => `/api/posts/${postId}/replies`,
@@ -36,7 +40,21 @@ const API_CONFIG = {
         UPDATE: (postId, id) => `/api/posts/${postId}/replies/${id}`,
         DELETE: (postId, id) => `/api/posts/${postId}/replies/${id}`,
       },
-
+    },
+    MESSAGES: {
+      SEND: "/api/messages", // POST
+      LIST: "/api/messages", // GET, Admin
+      PATCH: (id) => `/api/messages/${id}`, //PATCH, Admin
+    },
+    FILES: {
+      // PRESIGN: "/api/files/presign",  // POST
+      DIRECT_UPLOAD: "/api/files/upload", // POST
+      RETRIEVE: (objectKey) => `/api/files/retrieve/${objectKey}`, // GET
+    },
+    USERS: {
+      PROFILE: (userId) => `/api/users/profile/${userId}`,
+      PATCH_PROFILE: (userId) => `/api/users/profile/${userId}`,
+      UPDATE_PROFILE_IMAGE: (userId) => `/api/users/profile/${userId}`,
     },
   },
 };

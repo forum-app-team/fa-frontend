@@ -56,7 +56,7 @@ export default function AttachmentUploader({ value = [], onChange, disabled }) {
                 <button type="button" className="btn btn-outline-primary" onClick={choose} disabled={disabled || uploading}>
                     {uploading ? "Uploading…" : "Add attachments"}
                 </button>
-                <span className="text-muted small">PNG, JPG, PDF • up to 20MB</span>
+                <span className="text-muted small">PNG, JPG, PDF, ZIP • up to 20MB</span>
             </div>
             <input
                 ref={inputRef}
