@@ -7,15 +7,12 @@ export async function presignAttachment({ filename, contentType, sizeBytes }) {
     const url = `${FILE_BASE}/api/files/presign`;
     const body = { filename, contentType, sizeBytes, category: "postAttachment" };
     const { data } = await apiClient.post(url, body);
-// { uploadMethod:'PUT', uploadUrl, headers, objectKey, fileUrl, expiresInSeconds }
     return data;
 }
 
 export async function retrieveFile(objectKey) {
-    // objectKey contains slashes; encode as one path segment
     const url = `${FILE_BASE}/api/files/retrieve/${encodeURIComponent(objectKey)}`;
     const { data } = await apiClient.get(url);
-    // data: { downloadUrl, metadata: {...}, expiresInSeconds: 3600 }
     return data;
 }
 
@@ -25,9 +22,6 @@ export async function uploadToSignedUrl({ uploadUrl, headers, file }) {
 }
 
 
-/**
- * High-level helper: presign + PUT, returns attachment payload for post
- */
 export async function uploadAttachment(file) {
     const meta = await presignAttachment({
         filename: file.name,
@@ -43,15 +37,3 @@ export async function uploadAttachment(file) {
         filename: file.name,
     };
 }
-
-/*
-export async function directUploadAttachment(file) {
-    const form = new FormData();
-    form.append("file", file);
-    form.append("category", "postAttachment");
-    const url = `${FILE_BASE}/api/files/upload`;
-    const { data } = await apiClient.post(url, form, { headers: { "Content-Type": "multipart/form-data" } });
-// { fileUrl, objectKey, sizeBytes, contentType }
-    return { ...data, filename: file.name };
-}
- */
