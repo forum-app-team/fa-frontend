@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Container } from 'react-bootstrap';
 import { useListUsersQuery, useUpdateUserStatusMutation, useUpdateUserRolesMutation } from '../users.api';
@@ -22,7 +22,7 @@ const UserManagement = () => {
   const popupHandlerRef = useRef(() => {});
   const [ updateUserStatus, {} ] = useUpdateUserStatusMutation();
   const [ updateUserRoles, {} ] = useUpdateUserRolesMutation();
-  const handleToggleState = (u) => {
+  const handleToggleState = useCallback((u) => {
     const { id, email, role, isActive } = u;
     setShowPopup(true);
     setPopupContent(`Email: ${email}`);
@@ -34,7 +34,7 @@ const UserManagement = () => {
       setPopupTitle(`Are you sure to ${isActive ? '' : 'un'}ban this user?`);
       popupHandlerRef.current = async () => await updateUserStatus([{id, active: !isActive}]);
     }
-  };
+  }, []);
 
   return (
     <Container fluid="md" className="py-3">

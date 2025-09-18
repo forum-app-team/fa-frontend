@@ -254,7 +254,7 @@ export default function UserHomePage({isAdmin}) {/*
 
   return (
     <Container fluid="md" className="py-3">
-      <h2 className="mb-0">{postFilter.status} Posts</h2>
+      <h2 className="mb-3">{postFilter.status} Posts</h2>
       {isAdmin &&
         <Nav variant="tabs" className="mb-3" activeKey={postFilter.status} onSelect={
           (key) => setPostFilter((state) => (isAdmin ? {...initState, status: key} : state))
