@@ -1,6 +1,7 @@
 import { useGetProfileQuery } from "../store/users.slice";
 import { useSelector } from "react-redux";
 
+// Format ISO date string to readable format for display
 const formatDate = (iso) => {
   try {
     return new Date(iso).toLocaleDateString(undefined, {
@@ -13,6 +14,7 @@ const formatDate = (iso) => {
   }
 };
 
+// Avatar component: shows profile image if available, otherwise generates initials
 const Avatar = ({ imageUrl, firstName, lastName }) => {
   const initials = `${firstName?.[0] || ""}${
     lastName?.[0] || ""
@@ -27,6 +29,7 @@ const Avatar = ({ imageUrl, firstName, lastName }) => {
       />
     );
   }
+  // Fallback: colored circle with initials
   return (
     <div
       className="rounded-circle d-flex align-items-center justify-content-center fw-semibold text-white"
@@ -44,6 +47,7 @@ const Avatar = ({ imageUrl, firstName, lastName }) => {
   );
 };
 
+// Skeleton placeholder for loading states
 const Skeleton = ({ width = 120, height = 20, className = "" }) => (
   <div
     className={`bg-secondary bg-opacity-25 rounded placeholder-wave ${className}`}
@@ -51,29 +55,24 @@ const Skeleton = ({ width = 120, height = 20, className = "" }) => (
   />
 );
 
-import { jwtDecode } from "jwt-decode";
+import { getUserIdFromToken } from "../utils/authUtils";
 
-const getUserIdFromToken = () => {
-  const token = localStorage.getItem("token");
-  if (!token) return null;
-  try {
-    const decoded = jwtDecode(token);
-    return decoded.sub || decoded.user_id || decoded.id || null;
-  } catch {
-    return null;
-  }
-};
-
+// Main profile header component
+// - Extracts userId from token
+// - Fetches profile data
+// - Shows avatar, name, and email verification badge
+// - Handles loading and error states
 const ProfileHeader = () => {
-  const userId = getUserIdFromToken();
-  const { data, isLoading, error } = useGetProfileQuery(userId);
-  const profile = data?.profile;
-  const emailVerified = useSelector((state) => state.auth.user?.emailVerified);
+  const userId = getUserIdFromToken(); // Used for API call
+  const { data, isLoading, error } = useGetProfileQuery(userId); // RTK Query for profile
+  const profile = data?.profile || {};
+  const emailVerified = useSelector((state) => state.auth.user?.emailVerified); // Redux state for email verification
 
   return (
     <section className="card shadow-sm">
       <div className="card-body d-flex gap-3">
         <div>
+          {/* Show skeleton while loading, otherwise avatar */}
           {isLoading ? (
             <Skeleton
               width={96}
@@ -91,33 +90,46 @@ const ProfileHeader = () => {
 
         <div className="flex-grow-1">
           <div>
+            {/* Show skeleton, error, or profile info */}
             {isLoading ? (
               <Skeleton width={180} height={28} />
             ) : error ? (
-              <span className="text-danger fw-semibold">
+              <span className="text-danger fw-semibold" role="alert">
                 Error loading profile
               </span>
             ) : (
               <>
                 <h2 className="h4 mb-1">
-                  {profile.firstName?.charAt(0).toUpperCase() +
-                    profile.firstName?.slice(1)}{" "}
-                  {profile.lastName?.charAt(0).toUpperCase() +
-                    profile.lastName?.slice(1)}{" "}
+                  {/* Capitalize first/last name, show verification badge */}
+                  {profile.firstName
+                    ? profile.firstName.charAt(0).toUpperCase() +
+                      profile.firstName.slice(1)
+                    : ""}{" "}
+                  {profile.lastName
+                    ? profile.lastName.charAt(0).toUpperCase() +
+                      profile.lastName.slice(1)
+                    : ""}
                   {emailVerified === false && (
-                    <span className="badge text-bg-warning align-middle">
+                    <span
+                      className="badge text-bg-warning align-middle"
+                      aria-label="Email unverified"
+                    >
                       Unverified
                     </span>
                   )}
                   {emailVerified === true && (
-                    <span className="badge text-bg-success align-middle">
+                    <span
+                      className="badge text-bg-success align-middle"
+                      aria-label="Email verified"
+                    >
                       Verified
                     </span>
                   )}
                 </h2>
-                {/* Move member since below name and badge */}
+                {/* Show member since date below name and badge */}
                 <div className="small text-muted mt-1">
-                  Member since {formatDate(profile.dateJoined)}
+                  Member since{" "}
+                  {profile.dateJoined ? formatDate(profile.dateJoined) : "-"}
                 </div>
               </>
             )}

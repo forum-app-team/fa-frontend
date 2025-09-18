@@ -6,7 +6,7 @@ import AttachmentList from "./AttachmentList";
 
 /**
  * FileUploadManager - A comprehensive file upload management component
- * 
+ *
  * @param {Object} props
  * @param {string} props.category - File category for upload (e.g., "postAttachment", "profile")
  * @param {Object} props.imageConfig - Configuration for image uploads
@@ -16,68 +16,83 @@ import AttachmentList from "./AttachmentList";
  * @param {boolean} props.disabled - Whether the component is disabled
  * @param {string} props.className - Additional CSS classes
  */
-const FileUploadManager = forwardRef(function FileUploadManager({
-  category = "postAttachment",
-  imageConfig = {
-    enabled: true,
-    label: "Images",
-    acceptedTypes: ["image/png", "image/jpeg"],
-    maxSizeMB: 20,
-    multiple: true
+const FileUploadManager = forwardRef(function FileUploadManager(
+  {
+    category = "postAttachment",
+    imageConfig = {
+      enabled: true,
+      label: "Images",
+      acceptedTypes: ["image/png", "image/jpeg"],
+      maxSizeMB: 20,
+      multiple: true,
+    },
+    attachmentConfig = {
+      enabled: true,
+      label: "Attachments",
+      acceptedTypes: ["image/png", "image/jpeg", "application/pdf"],
+      maxSizeMB: 20,
+      multiple: true,
+    },
+    onFilesUploaded,
+    onError,
+    disabled = false,
+    className = "",
   },
-  attachmentConfig = {
-    enabled: true,
-    label: "Attachments",
-    acceptedTypes: ["image/png", "image/jpeg", "application/pdf"],
-    maxSizeMB: 20,
-    multiple: true
-  },
-  onFilesUploaded,
-  onError,
-  disabled = false,
-  className = ""
-}, ref) {
+  ref
+) {
   const [imageFiles, setImageFiles] = useState([]);
   const [attachmentFiles, setAttachmentFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
 
   // Expose methods to parent component via ref
-  useImperativeHandle(ref, () => ({
-    uploadFiles,
-    clearAll,
-    hasFiles: imageFiles.length > 0 || attachmentFiles.length > 0
-  }), [imageFiles.length, attachmentFiles.length]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      uploadFiles,
+      clearAll,
+      hasFiles: imageFiles.length > 0 || attachmentFiles.length > 0,
+    }),
+    [imageFiles.length, attachmentFiles.length]
+  );
 
-  const handleError = useCallback((errorMessage) => {
-    setError(errorMessage);
-    onError?.(errorMessage);
-  }, [onError]);
+  const handleError = useCallback(
+    (errorMessage) => {
+      setError(errorMessage);
+      onError?.(errorMessage);
+    },
+    [onError]
+  );
 
-  const handleImageSelection = useCallback((files) => {
-    setError(null);
-    setImageFiles(prev => [...prev, ...files]);
-  }, []);
+  const handleImageSelection = useCallback(
+    (files) => {
+      setError(null);
+      setImageFiles(
+        imageConfig.multiple ? (prev) => [...prev, ...files] : files
+      );
+    },
+    [imageConfig.multiple]
+  );
 
   const handleAttachmentSelection = useCallback((files) => {
     setError(null);
-    setAttachmentFiles(prev => [...prev, ...files]);
+    setAttachmentFiles((prev) => [...prev, ...files]);
   }, []);
 
   const removeImage = useCallback((index) => {
-    setImageFiles(prev => prev.filter((_, i) => i !== index));
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
   const removeAttachment = useCallback((index) => {
-    setAttachmentFiles(prev => prev.filter((_, i) => i !== index));
+    setAttachmentFiles((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
   const uploadFiles = useCallback(async () => {
     if (uploading) return null;
-    
+
     setUploading(true);
     setError(null);
-    
+
     try {
       const uploadedImageUrls = [];
       const uploadedAttachmentUrls = [];
@@ -97,24 +112,32 @@ const FileUploadManager = forwardRef(function FileUploadManager({
       const result = {
         images: uploadedImageUrls,
         attachments: uploadedAttachmentUrls,
-        totalFiles: uploadedImageUrls.length + uploadedAttachmentUrls.length
+        totalFiles: uploadedImageUrls.length + uploadedAttachmentUrls.length,
       };
 
       onFilesUploaded?.(result);
-      
+
       // Clear files after successful upload
       setImageFiles([]);
       setAttachmentFiles([]);
-      
+
       return result;
     } catch (e) {
-      const errorMessage = e?.response?.data?.message || e.message || "Upload failed";
+      const errorMessage =
+        e?.response?.data?.message || e.message || "Upload failed";
       handleError(errorMessage);
       throw e;
     } finally {
       setUploading(false);
     }
-  }, [imageFiles, attachmentFiles, category, onFilesUploaded, handleError, uploading]);
+  }, [
+    imageFiles,
+    attachmentFiles,
+    category,
+    onFilesUploaded,
+    handleError,
+    uploading,
+  ]);
 
   const clearAll = useCallback(() => {
     setImageFiles([]);
@@ -138,7 +161,7 @@ const FileUploadManager = forwardRef(function FileUploadManager({
             onError={handleError}
             className={disabled ? "opacity-50" : ""}
           />
-          
+
           <ImagePreview
             images={imageFiles}
             onRemove={disabled ? null : removeImage}
@@ -158,7 +181,7 @@ const FileUploadManager = forwardRef(function FileUploadManager({
             onError={handleError}
             className={disabled ? "opacity-50" : ""}
           />
-          
+
           <AttachmentList
             attachments={attachmentFiles}
             onRemove={disabled ? null : removeAttachment}
@@ -184,7 +207,7 @@ const FileUploadManager = forwardRef(function FileUploadManager({
           >
             Clear All
           </button>
-          
+
           <div className="text-muted small align-self-center">
             {imageFiles.length + attachmentFiles.length} file(s) selected
           </div>

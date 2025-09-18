@@ -30,6 +30,9 @@ const API_CONFIG = {
       BAN: (id) => `/api/posts/${id}/ban`, // POST, Admin
       UNBAN: (id) => `/api/posts/${id}/unban`, // POST, Admin
       RECOVER: (id) => `/api/posts/${id}/recover`, // POST, Admin
+
+      TOP_POSTS: (limit = 3) => `/api/posts/top?limit=${limit}`,
+      DRAFTS: "/api/posts/drafts",
     },
     MESSAGES: {
       SEND: "/api/messages", // POST
@@ -38,10 +41,14 @@ const API_CONFIG = {
     },
     FILES: {
       // PRESIGN: "/api/files/presign",  // POST
-      DIRECT_UPLOAD: "/api/files/upload",  // POST
-      RETRIEVE: (objectKey) => `/api/files/retrieve/${objectKey}`,  // GET
+      DIRECT_UPLOAD: "/api/files/upload", // POST
+      RETRIEVE: (objectKey) => `/api/files/retrieve/${objectKey}`, // GET
     },
-    // etc...
+    USERS: {
+      PROFILE: (userId) => `/api/users/profile/${userId}`,
+      PATCH_PROFILE: (userId) => `/api/users/profile/${userId}`,
+      UPDATE_PROFILE_IMAGE: (userId) => `/api/users/profile/${userId}`,
+    },
   },
 };
 
