@@ -3,13 +3,13 @@ const API_CONFIG = {
   TIMEOUT: import.meta.env.VITE_API_TIMEOUT,
   ENDPOINTS: {
     AUTH: {
-      LOGIN: "/api/auth/login",
-      REGISTER: "/api/auth/register",
-      LOGOUT: "/api/auth/logout",
-      REFRESH: "/api/auth/refresh",
-      UPDATE_IDENTITY: "/api/auth/identity",
-      EMAIL_VERIFICATION_SEND: "/api/auth/verify-email/send",
-      EMAIL_VERIFICATION_VERIFY: "/api/auth/verify-email/verify",
+      LOGIN: "/api/auth/login",  // POST
+      REGISTER: "/api/auth/register", // POST
+      LOGOUT: "/api/auth/logout", // GET
+      REFRESH: "/api/auth/refresh", // POST
+      UPDATE_IDENTITY: "/api/auth/identity", // GET, PUT
+      EMAIL_VERIFICATION_SEND: "/api/auth/verify-email/send", // POST
+      EMAIL_VERIFICATION_VERIFY: "/api/auth/verify-email/verify", // POST
     },
     ADMIN: {
       USERS: "/api/auth/admin/users",
@@ -52,6 +52,7 @@ const API_CONFIG = {
       RETRIEVE: (objectKey) => `/api/files/retrieve/${objectKey}`, // GET
     },
     USERS: {
+      ME: "/api/users/profile/me", // GET
       PROFILE: (userId) => `/api/users/profile/${userId}`,
       PATCH_PROFILE: (userId) => `/api/users/profile/${userId}`,
       UPDATE_PROFILE_IMAGE: (userId) => `/api/users/profile/${userId}`,

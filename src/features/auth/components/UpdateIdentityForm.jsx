@@ -26,7 +26,7 @@ const UpdateIdentityForm = ({ mode }) => {
 
     // check if passwords / emails match
     const fieldsMatch = mode === "password"
-        ? credentials.newPassword === credentials.confirmNewPassword 
+        ? credentials.newPassword === credentials.confirmNewPassword
         : credentials.newEmail === credentials.confirmNewEmail;
 
     const handleChange = (e) => {
@@ -139,8 +139,10 @@ const UpdateIdentityForm = ({ mode }) => {
             )}
 
             {error && <p style={{ color: "red" }}>{error}</p>}
-
-            <button type="submit" disabled={loading || !fieldsMatch}>Save Changes</button>
+            <div style={{ display: "flex", justifyContent: "center", gap: "0.5rem" }}>
+                <button type="submit" disabled={loading || !fieldsMatch}>Save Changes</button>
+                <button onClick={() => setCredentials(initCredentials)}>Cancel</button>
+            </div>
         </form>
     );
 };
