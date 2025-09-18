@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { Alert, Button, Card, FloatingLabel, Form } from "react-bootstrap";
 
 import { loginStart, loginSuccess, loginFailure } from "../store/auth.slice";
 import { loginUser } from "../api/auth.api";
@@ -64,8 +65,8 @@ const Login = () => {
   }, []); // also clean up credentials at unmount;
 
   if (user) return <Navigate to={PATHS.HOME} />;
-  return (
-    <div>
+  return (<>
+    {/*<div>
       <h2>Login</h2>
       {error && <div style={{ color: "red" }}>{error}</div>}
       <form onSubmit={handleSubmit}>
@@ -89,7 +90,63 @@ const Login = () => {
         </div>
         <button type="submit" disabled={loading}>Login</button>
       </form>
-    </div>
+    </div>*/}
+    <Card className="mx-auto" style={{ maxWidth: "400px" }}>
+      <Card.Body>
+        <Card.Title className="mb-4">Login</Card.Title>
+
+        {error && (
+          <Alert variant="danger" className="py-2">
+            {error}
+          </Alert>
+        )}
+
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3" controlId="loginEmail">
+            <FloatingLabel
+              controlId="floatingEmail"
+              label="Email address"
+              className="mb-3"
+            >
+              <Form.Control
+                type="email"
+                name="email"
+                value={credentials.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                required
+              />
+            </FloatingLabel>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="loginPassword">
+            <FloatingLabel
+              controlId="floatingPassword"
+              label="Password"
+              className="mb-3"
+            >
+              <Form.Control
+                type="password"
+                name="password"
+                value={credentials.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                required
+              />
+            </FloatingLabel>
+          </Form.Group>
+
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={loading}
+            className="w-100"
+          >
+            {loading ? "Logging in..." : "Login"}
+          </Button>
+        </Form>
+      </Card.Body>
+    </Card></>
   );
 };
 

@@ -14,11 +14,11 @@ export default function PostTable({ posts = [], isAdmin, status = 'Published', o
     <Table hover responsive="sm" size="sm" className="align-middle" style={{ tableLayout: 'fixed', width: '100%' }}>
       <thead className="text-muted">
         <tr>
-          <th style={{width: "60%"}}>Title</th>
+          <th style={{width: "56%"}}>Title</th>
           <th style={{width: "20%"}}>User</th>
           {isAdmin ?
             <>
-              <th style={{width: "12%"}}>Date</th>
+              <th style={{width: "16%"}}>Date</th>
               <th style={{width: "8%"}}>Action</th>
             </> :
             <th style={{width: "20%"}}>Date</th>
