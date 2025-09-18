@@ -67,6 +67,7 @@ const Skeleton = ({ width = 120, height = 20, className = "" }) => (
 );
 
 import { getUserIdFromToken } from "../utils/authUtils";
+import { Button } from "react-bootstrap";
 
 // Main profile header component
 // - Extracts userId from token
@@ -122,7 +123,7 @@ const ProfileHeader = () => {
                     : ""}
                   {emailVerified === false && (
                     <span
-                      className="badge text-bg-warning align-middle"
+                      className="badge text-bg-warning align-middle ms-2"
                       aria-label="Email unverified"
                     >
                       Unverified
@@ -130,16 +131,16 @@ const ProfileHeader = () => {
                   )}
                   {emailVerified === true && (
                     <span
-                      className="badge text-bg-success align-middle"
+                      className="badge text-bg-success align-middle ms-2"
                       aria-label="Email verified"
                     >
                       Verified
                     </span>
                   )}
 
-      {emailVerified === false && (<button onClick={resendVerificationEmail} disabled={emailVerified}>
+      {emailVerified === false && (<Button className="ms-2" size="sm" onClick={resendVerificationEmail} disabled={emailVerified}>
         Send Verification Email
-      </button>)}
+      </Button>)}
 
                 </h2>
                 {/* Show member since date below name and badge */}

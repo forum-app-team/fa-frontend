@@ -7,6 +7,7 @@ import EditProfileButton from "../components/EditProfileButton";
 import ProfileImageUploader from "../components/ProfileImageUploader";
 import EmailUpdateSection from "../components/EmailUpdateSection";
 import UpdateNameSection from "../components/UpdateNameSection";
+import { Button } from "react-bootstrap";
 
 
 
@@ -34,7 +35,7 @@ const UserProfile = () => {
         <h1>User Profile</h1>
 
         <div style={{display: "flex", gap: ".5rem"}}>
-        <button onClick={() => {setShowEdit(v => false); setShowEditCreds(v => !v);}}>Edit Email/Password</button>
+        <Button onClick={() => {setShowEdit(v => false); setShowEditCreds(v => !v);}}>Edit Email/Password</Button>
         <EditProfileButton onClick={() => {setShowEdit(v => !v); setShowEditCreds(v => false);}} />
         </div>
       </header>
