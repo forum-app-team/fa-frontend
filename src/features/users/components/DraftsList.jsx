@@ -1,4 +1,6 @@
 import { useGetDraftsQuery } from "@/features/users/store/users.slice";
+import { generatePath, Link } from "react-router-dom";
+import { PATHS } from "@/app/config/paths";
 
 const DraftsList = () => {
   const { data: drafts, isLoading, isError, refetch } = useGetDraftsQuery();
@@ -28,7 +30,12 @@ const DraftsList = () => {
                   key={draft.id}
                   className="list-group-item d-flex justify-content-between align-items-center"
                 >
-                  <span className="fw-medium">{draft.title}</span>
+                  {/*<span className="fw-medium">{draft.title}</span>*/}
+                  <Link
+                    to={generatePath(PATHS.POST_DETAIL, { id: draft.id })}
+                    className="fw-medium text-truncate text-nowrap text-decoration-none link-dark"
+                    title={draft.title}
+                  >{draft.title}</Link>
                   <span className="badge bg-secondary">
                     Last updated:{" "}
                     {draft.updatedAt

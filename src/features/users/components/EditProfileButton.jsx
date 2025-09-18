@@ -1,6 +1,10 @@
+import { Button } from "react-bootstrap";
+
 const EditProfileButton = ({ onClick }) => {
   return (
-    <button type="button" onClick={onClick}>Edit Profile</button>
+    <Button variant="primary" onClick={onClick}>
+      Edit Profile
+    </Button>
   );
 };
 
